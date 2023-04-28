@@ -94,11 +94,9 @@ Page Number(s):
       }
 
       function updateCurrentDeal(index,dealInfo) {
-          console.log("Index: ",index)
           var dealLoc = $('#deal')
           if (dealInfo == undefined) {
             dealLoc.hide()
-            console.log('Undefined')
             return
           } else {
             $('#dealIndex').text(index+1)
