@@ -76,7 +76,7 @@ Page Number(s):
   </div>
 <script type="module">
 
-      import { Application } from "./application.js"
+      import { Application } from "./model/application.js"
       var App = new Application()
 
       function backDeal() {
@@ -115,10 +115,11 @@ Page Number(s):
             //$('#back').toggle(App.allowPrevious)
             //$('#forward').toggle(App.allowNext)
             dealInfo.deal.eachHand((seat,hand) => {
-              console.log(seat.name)
               var handDiv = $('.diagram .'+seat.name)
               hand.eachSuit((suit,holding) => {
-                handDiv.find('.'+suit.name+ ' span.holding').text(holding.toString())
+                var hString = holding.toString()
+                if (hString=='-')  { hString = '\u2014' }
+                handDiv.find('.'+suit.name+ ' span.holding').text(hString)
               })
             })
             // var hands = dealInfo.deal.hands.map((hand) => hand.toString()).join("\n")

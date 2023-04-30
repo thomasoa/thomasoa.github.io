@@ -2,14 +2,21 @@ import * as C from "./constants.js";
 var Holding = /** @class */ (function () {
     function Holding(ranks) {
         this.ranks = ranks;
-        this.length = ranks.length;
         this.bits = ranks.reduce(function (binary, rank) { return rank.bit | binary; }, 0);
     }
+    Object.defineProperty(Holding.prototype, "length", {
+        get: function () { return this.ranks.length; },
+        enumerable: false,
+        configurable: true
+    });
     Holding.prototype.asString = function (divider) {
         if (this.length == 0) {
             return '-';
         }
         return this.ranks.map(function (rank) { return rank.brief; }).join(divider);
+    };
+    Holding.prototype.isVoid = function () {
+        return this.length == 0;
     };
     Holding.prototype.toString = function () {
         return this.asString(' ');
@@ -31,10 +38,26 @@ var Hand = /** @class */ (function () {
     Hand.prototype.suit = function (suit) {
         return this.holdings[suit.order];
     };
-    Hand.prototype.spades = function () { return this.suit(C.Suits.spades); };
-    Hand.prototype.hearts = function () { return this.suit(C.Suits.hearts); };
-    Hand.prototype.diamonds = function () { return this.suit(C.Suits.diamonds); };
-    Hand.prototype.clubs = function () { return this.suit(C.Suits.clubs); };
+    Object.defineProperty(Hand.prototype, "spades", {
+        get: function () { return this.suit(C.Suits.spades); },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Hand.prototype, "hearts", {
+        get: function () { return this.suit(C.Suits.hearts); },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Hand.prototype, "diamonds", {
+        get: function () { return this.suit(C.Suits.diamonds); },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Hand.prototype, "clubs", {
+        get: function () { return this.suit(C.Suits.clubs); },
+        enumerable: false,
+        configurable: true
+    });
     Hand.prototype.has = function (card) {
         return this.suit(card.suit).has(card.rank);
     };
@@ -54,13 +77,30 @@ var Deal = /** @class */ (function () {
     Deal.prototype.hand = function (seat) {
         return this.hands[seat.order];
     };
-    Deal.prototype.north = function () { return this.hand(C.Seats.north); };
-    Deal.prototype.east = function () { return this.hand(C.Seats.east); };
-    Deal.prototype.south = function () { return this.hand(C.Seats.south); };
-    Deal.prototype.west = function () { return this.hand(C.Seats.west); };
+    Object.defineProperty(Deal.prototype, "north", {
+        get: function () { return this.hand(C.Seats.north); },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Deal.prototype, "east", {
+        get: function () { return this.hand(C.Seats.east); },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Deal.prototype, "south", {
+        get: function () { return this.hand(C.Seats.south); },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Deal.prototype, "west", {
+        get: function () { return this.hand(C.Seats.west); },
+        enumerable: false,
+        configurable: true
+    });
     Deal.prototype.eachHand = function (method) {
-        var _this = this;
-        C.Seats.all.forEach(function (seat) { return method(seat, _this.hands[seat.order]); });
+        //var hands=this.hands;
+        //C.Seats.all.forEach((seat)=> method(seat,hands[seat.order]))
+        this.hands.forEach(function (hand, index) { return method(C.Seats.all[index], hand); });
     };
     return Deal;
 }());
