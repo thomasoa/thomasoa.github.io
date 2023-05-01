@@ -5,9 +5,34 @@
  */
 var ChooseCache = /** @class */ (function () {
     function ChooseCache(size) {
-        this.size = size;
-        this.rows = Array(size);
+        var _this = this;
+        //this.rows = Array<PascalRow>(size+1)
+        this.rows = Array.from({ length: size + 1 }, function (v, index) { return _this.blankRow(index); });
     }
+    Object.defineProperty(ChooseCache.prototype, "size", {
+        get: function () {
+            return this.rows.length - 1;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    ChooseCache.prototype.blankRow = function (rowNum) {
+        // We only need half the row
+        var columns = Math.floor(rowNum / 2) + 1;
+        var row = new Array(columns);
+        row[0] = BigInt(1);
+        return row;
+    };
+    ChooseCache.prototype.addRow = function () {
+        this.rows.push(this.blankRow(this.size + 1));
+    };
+    ChooseCache.prototype.row = function (n) {
+        while (this.size < n) {
+            this.addRow();
+        }
+        this.rows[n] = this.rows[n] || this.blankRow(n);
+        return this.rows[n];
+    };
     ChooseCache.prototype.choose = function (n, k) {
         if (2 * k > n) {
             k = n - k;
@@ -15,18 +40,8 @@ var ChooseCache = /** @class */ (function () {
         if (k < 0) {
             return BigInt(0);
         }
-        var lazy = function (c) { return c.choose(n - 1, k - 1) + c.choose(n - 1, k); };
-        if (n > this.size) {
-            return lazy(this);
-        }
-        if (this.rows[n] == undefined) {
-            this.rows[n] = Array(n + 1);
-            this.rows[n][0] = BigInt(1);
-        }
-        var row = this.rows[n];
-        if (row[k] == undefined) {
-            row[k] = lazy(this);
-        }
+        var row = this.row(n);
+        row[k] = row[k] || (this.choose(n - 1, k - 1) + this.choose(n - 1, k));
         return row[k];
     };
     return ChooseCache;

@@ -21,13 +21,10 @@ var DealSignature = /** @class */ (function () {
     };
     return DealSignature;
 }());
-var defaultSignature = new DealSignature([13, 13, 13, 13]);
-function signature_or_default(sig) {
-    if (sig == undefined) {
-        return defaultSignature;
-    }
-    return sig;
-}
+/**
+ * A standard bridge signature - four seats, each seat getting 13 cards
+ */
+var bridgeSignature = new DealSignature([13, 13, 13, 13]);
 /**
  *  A deal which matches a signature
  *
@@ -45,13 +42,14 @@ var NumericDeal = /** @class */ (function () {
         this.signature = sig;
         this.toWhom = Array.from(toWhom);
         // Split deal into hands
-        this.hands = this.signature.perSeat.map(function (cards, seat) { return Array(0); });
+        var hands = this.signature.perSeat.map(function (cards, seat) { return Array(0); });
         this.toWhom.forEach(function (seat, card) {
             if (seat >= sig.seats || seat < 0) {
                 throw Error('Invalid seat ' + seat + ' for deal in with ' + sig.seats + ' seats');
             }
-            _this.hands[seat].push(card);
+            hands[seat].push(card);
         });
+        this.hands = hands;
         sig.perSeat.forEach(function (cards, seat) {
             if (cards != _this.hands[seat].length) {
                 throw Error('Wrong number of cards for seat ' + seat + ' expected ' + cards + ' cards');
@@ -61,4 +59,4 @@ var NumericDeal = /** @class */ (function () {
     return NumericDeal;
 }());
 export { DealSignature, NumericDeal, //classes
-signature_or_default };
+bridgeSignature };

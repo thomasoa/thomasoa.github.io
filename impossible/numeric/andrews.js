@@ -1,5 +1,5 @@
 //  An entirely numeric version of the book
-import { signature_or_default, NumericDeal } from "./deal.js";
+import { bridgeSignature, NumericDeal } from "./deal.js";
 import { choose } from "./choose.js";
 import { decode, encode } from './squashed.js';
 function computeFactors(cardsPer) {
@@ -54,7 +54,7 @@ var SequenceBuilder = /** @class */ (function () {
 }());
 var AndrewsStrategy = /** @class */ (function () {
     function AndrewsStrategy(signature) {
-        this.signature = signature_or_default(signature);
+        this.signature = signature || bridgeSignature;
         this.factors = computeFactors(this.signature.perSeat);
     }
     Object.defineProperty(AndrewsStrategy.prototype, "pages", {

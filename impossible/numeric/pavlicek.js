@@ -1,4 +1,5 @@
-import { signature_or_default, NumericDeal } from './deal.js';
+import { NumericDeal, // classes
+bridgeSignature } from './deal.js';
 var Range = /** @class */ (function () {
     function Range(start, width) {
         this.start = start;
@@ -56,7 +57,7 @@ var Remaining = /** @class */ (function () {
 }());
 var PavlicekStrategy = /** @class */ (function () {
     function PavlicekStrategy(signature) {
-        this.signature = signature_or_default(signature);
+        this.signature = signature || bridgeSignature;
     }
     Object.defineProperty(PavlicekStrategy.prototype, "pages", {
         get: function () { return this.signature.pages; },

@@ -69,10 +69,17 @@ var Hand = /** @class */ (function () {
     };
     return Hand;
 }());
+function buildHands(toWhom) {
+    var cards = Array.from({ length: 4 }, function () { return new Array(0); });
+    toWhom.forEach(function (seat, cardNum) {
+        cards[seat.order].push(C.Cards[cardNum]);
+    });
+    return cards.map(function (handCards) { return new Hand(handCards); });
+}
 var Deal = /** @class */ (function () {
-    function Deal(toWhom, hands) {
+    function Deal(toWhom) {
         this.toWhom = toWhom;
-        this.hands = hands;
+        this.hands = buildHands(toWhom);
     }
     Deal.prototype.hand = function (seat) {
         return this.hands[seat.order];

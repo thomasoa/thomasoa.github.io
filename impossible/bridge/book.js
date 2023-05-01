@@ -1,5 +1,5 @@
 import * as C from "./constants.js";
-import { Hand, Deal } from "./deal.js";
+import { Deal } from "./deal.js";
 var defaultCardMap = function (card) { return C.Cards[card]; };
 var defaultSeatMap = function (seat) { return C.Seats.all[seat]; };
 function validate_signature(signature) {
@@ -18,12 +18,8 @@ var BridgeBook = /** @class */ (function () {
     function BridgeBook(strategy, seatMap, cardMap) {
         validate_signature(strategy.signature);
         this.strategy = strategy;
-        if (seatMap == undefined) {
-            seatMap = defaultSeatMap;
-        }
-        if (cardMap == undefined) {
-            cardMap = defaultCardMap;
-        }
+        seatMap = seatMap || defaultSeatMap;
+        cardMap = cardMap || defaultCardMap;
         this.seatMap = seatMap;
         this.cardMap = cardMap;
     }
@@ -45,15 +41,12 @@ var BridgeBook = /** @class */ (function () {
         var seatMap = this.seatMap;
         var cardMap = this.cardMap;
         var toWhom = new Array(C.Cards.length);
-        var cardsInHands = C.Suits.all.map(function () { return new Array(); });
         numDeal.toWhom.forEach(function (seatNum, cardNum) {
             var seat = seatMap(seatNum);
             var card = cardMap(cardNum);
             toWhom[card.order] = seat;
-            cardsInHands[seat.order].push(card);
         });
-        var hands = cardsInHands.map(function (cards) { return new Hand(cards); });
-        return new Deal(toWhom, hands);
+        return new Deal(toWhom);
     };
     return BridgeBook;
 }());
