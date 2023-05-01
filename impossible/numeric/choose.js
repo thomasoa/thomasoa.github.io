@@ -30,7 +30,7 @@ var ChooseCache = /** @class */ (function () {
         while (this.size < n) {
             this.addRow();
         }
-        this.rows[n] = this.rows[n] || this.blankRow(n);
+        // this.rows[n] = this.rows[n] || this.blankRow(n)
         return this.rows[n];
     };
     ChooseCache.prototype.choose = function (n, k) {

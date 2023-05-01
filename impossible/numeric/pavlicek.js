@@ -10,7 +10,7 @@ var Range = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    Range.prototype.contain = function (num) {
+    Range.prototype.contains = function (num) {
         return num >= this.start && num < this.last;
     };
     return Range;
@@ -25,19 +25,24 @@ var Remaining = /** @class */ (function () {
         /**
          * Used when computing a deal from a page number
          */
+        if (!range.contains(pageNo)) {
+            throw new Error('Invalid page number ' + (pageNo.toString()));
+        }
         var nextStart = range.start;
         for (var seat = 0; seat < this.perSeat.length; seat++) {
             var cards = this.perSeat[seat];
             var width = range.width * BigInt(cards) / BigInt(this.total);
-            if (nextStart + width > pageNo) {
+            var nextRange = new Range(nextStart, width);
+            if (nextRange.contains(pageNo)) {
                 this.toWhom[card] = seat;
                 this.total--;
                 this.perSeat[seat]--;
-                return new Range(nextStart, width);
+                return nextRange;
             }
             nextStart = nextStart + width;
         }
-        throw new Error('Invalid page number ' + (pageNo.toString()));
+        // Should not be reached
+        throw new Error('Could not find seat for card ' + card + ' and page ' + pageNo);
     };
     Remaining.prototype.nextCard = function (card, seat, range) {
         /**
@@ -70,6 +75,7 @@ var PavlicekStrategy = /** @class */ (function () {
         configurable: true
     });
     PavlicekStrategy.prototype.computePageContent = function (pageNo) {
+        this.signature.assertValidPageNo(pageNo);
         var sig = this.signature;
         var remaining = new Remaining(sig.perSeat, sig.cards);
         var range = new Range(BigInt(0), sig.pages);
@@ -79,12 +85,16 @@ var PavlicekStrategy = /** @class */ (function () {
         return new NumericDeal(sig, remaining.toWhom);
     };
     PavlicekStrategy.prototype.computePageNumber = function (deal) {
+        if (!this.signature.equals(deal.signature)) {
+            throw new Error('Mismatched signatures for Deal and PavlicekStrategy');
+        }
         var range = new Range(BigInt(0), deal.signature.pages);
         var remaining = new Remaining(deal.signature.perSeat, deal.signature.cards);
         deal.toWhom.forEach(function (seat, card) {
             range = remaining.nextCard(card, seat, range);
         });
         if (range.width != BigInt(1)) {
+            // Shouldn't normally be reached
             throw new Error('Got range width ' + range.width.toString() + ' after decode');
         }
         return range.start;

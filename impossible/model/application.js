@@ -67,9 +67,7 @@ var Application = /** @class */ (function () {
         });
         var _this = this;
         newDeals.forEach(function (deal) { return _this.addDeal(deal); });
-        if (this.length > newCurrent) {
-            this.updateCurrent(newCurrent);
-        }
+        this.updateCurrent(newCurrent);
     };
     Application.prototype.findDeal = function (edition, scrambled, page) {
         this.findDeals(edition, scrambled, [page]);

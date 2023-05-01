@@ -19,6 +19,15 @@ var DealSignature = /** @class */ (function () {
             throw new Error("Invalid page " + pageNo + " outside range <=" + this.pages.toString());
         }
     };
+    DealSignature.prototype.equals = function (otherSig) {
+        if (this === otherSig) {
+            return true;
+        }
+        if (this.seats != otherSig.seats) {
+            return false;
+        }
+        return this.perSeat.every(function (value, index) { return value == otherSig.perSeat[index]; });
+    };
     return DealSignature;
 }());
 /**

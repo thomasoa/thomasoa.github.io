@@ -68,6 +68,9 @@ var AndrewsStrategy = /** @class */ (function () {
         configurable: true
     });
     AndrewsStrategy.prototype.computePageNumber = function (deal) {
+        if (!this.signature.equals(deal.signature)) {
+            throw new Error('Mismatched signatures for Deal and PavlicekStrategy');
+        }
         var sig = this.signature;
         var builders = Array(sig.seats - 1);
         for (var i = 1; i < sig.seats; i++) {
