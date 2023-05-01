@@ -58,9 +58,18 @@ div.body , div.signature {
 
 div.footer {
     clear: left;
-]}
+}
 
 
-ddiv, p, li {
+div, p, li {
   max-width: 7.5in;
+}
+
+#dealindex {
+    text-align: center;
+}
+
+.diagram {
+    margin-left: auto;
+    margin-right:auto;
 }

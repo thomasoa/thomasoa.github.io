@@ -33,8 +33,11 @@ var BridgeBook = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    BridgeBook.prototype.validPageNumber = function (pageNo) {
+        return pageNo >= BigInt(1) && pageNo <= this.lastPage;
+    };
     BridgeBook.prototype.getDeal = function (pageNo) {
-        if (pageNo < BigInt(1) || pageNo > this.lastPage) {
+        if (!this.validPageNumber(pageNo)) {
             throw Error('Invalid page number ' + pageNo + ', must be between 1 and ' + this.lastPage);
         }
         var numDeal = this.strategy.computePageContent(pageNo - BigInt(1));

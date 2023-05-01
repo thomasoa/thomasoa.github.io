@@ -13,6 +13,9 @@ var Range = /** @class */ (function () {
     Range.prototype.contains = function (num) {
         return num >= this.start && num < this.last;
     };
+    Range.prototype.computeWidth = function (numerator, denominator) {
+        return this.width * BigInt(numerator) / BigInt(denominator);
+    };
     return Range;
 }());
 var Remaining = /** @class */ (function () {
@@ -21,17 +24,11 @@ var Remaining = /** @class */ (function () {
         this.toWhom = new Array(total);
         this.total = total;
     }
-    Remaining.prototype.nextRange = function (range, pageNo, card) {
-        /**
-         * Used when computing a deal from a page number
-         */
-        if (!range.contains(pageNo)) {
-            throw new Error('Invalid page number ' + (pageNo.toString()));
-        }
+    Remaining.prototype.checkedNextRange = function (range, pageNo, card) {
         var nextStart = range.start;
         for (var seat = 0; seat < this.perSeat.length; seat++) {
             var cards = this.perSeat[seat];
-            var width = range.width * BigInt(cards) / BigInt(this.total);
+            var width = range.computeWidth(cards, this.total);
             var nextRange = new Range(nextStart, width);
             if (nextRange.contains(pageNo)) {
                 this.toWhom[card] = seat;
@@ -41,8 +38,16 @@ var Remaining = /** @class */ (function () {
             }
             nextStart = nextStart + width;
         }
-        // Should not be reached
         throw new Error('Could not find seat for card ' + card + ' and page ' + pageNo);
+    };
+    Remaining.prototype.nextRange = function (range, pageNo, card) {
+        /**
+         * Used when computing a deal from a page number
+         */
+        if (!range.contains(pageNo)) {
+            throw new Error('Invalid page number ' + (pageNo.toString()));
+        }
+        return this.checkedNextRange(range, pageNo, card);
     };
     Remaining.prototype.nextCard = function (card, seat, range) {
         /**
@@ -52,8 +57,8 @@ var Remaining = /** @class */ (function () {
         for (var skipSeat = 0; skipSeat < seat; skipSeat++) {
             skip += this.perSeat[skipSeat];
         }
-        var newStart = range.start + range.width * BigInt(skip) / BigInt(this.total);
-        var width = range.width * BigInt(this.perSeat[seat]) / BigInt(this.total);
+        var newStart = range.start + range.computeWidth(skip, this.total);
+        var width = range.computeWidth(this.perSeat[seat], this.total);
         this.total -= 1;
         this.perSeat[seat] -= 1;
         return new Range(newStart, width);
@@ -74,21 +79,34 @@ var PavlicekStrategy = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(PavlicekStrategy.prototype, "baseRange", {
+        /**
+         * The range for all pages for this strategy
+         */
+        get: function () {
+            return new Range(BigInt(0), this.pages);
+        },
+        enumerable: false,
+        configurable: true
+    });
     PavlicekStrategy.prototype.computePageContent = function (pageNo) {
         this.signature.assertValidPageNo(pageNo);
         var sig = this.signature;
         var remaining = new Remaining(sig.perSeat, sig.cards);
-        var range = new Range(BigInt(0), sig.pages);
+        var range = this.baseRange;
         for (var card = 0; card < sig.cards; card++) {
             range = remaining.nextRange(range, pageNo, card);
         }
         return new NumericDeal(sig, remaining.toWhom);
     };
-    PavlicekStrategy.prototype.computePageNumber = function (deal) {
+    PavlicekStrategy.prototype.validateSignature = function (deal) {
         if (!this.signature.equals(deal.signature)) {
             throw new Error('Mismatched signatures for Deal and PavlicekStrategy');
         }
-        var range = new Range(BigInt(0), deal.signature.pages);
+    };
+    PavlicekStrategy.prototype.computePageNumber = function (deal) {
+        this.validateSignature(deal);
+        var range = this.baseRange;
         var remaining = new Remaining(deal.signature.perSeat, deal.signature.cards);
         deal.toWhom.forEach(function (seat, card) {
             range = remaining.nextCard(card, seat, range);

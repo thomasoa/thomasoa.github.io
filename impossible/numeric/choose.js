@@ -33,10 +33,14 @@ var ChooseCache = /** @class */ (function () {
         // this.rows[n] = this.rows[n] || this.blankRow(n)
         return this.rows[n];
     };
-    ChooseCache.prototype.choose = function (n, k) {
+    ChooseCache.prototype.smallK = function (n, k) {
         if (2 * k > n) {
-            k = n - k;
+            return n - k;
         }
+        return k;
+    };
+    ChooseCache.prototype.choose = function (n, k) {
+        k = this.smallK(n, k);
         if (k < 0) {
             return BigInt(0);
         }

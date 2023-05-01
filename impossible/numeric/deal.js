@@ -14,6 +14,13 @@ var DealSignature = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    DealSignature.prototype.validSeat = function (seatNum) {
+        return seatNum >= 0 && seatNum < this.seats;
+    };
+    DealSignature.prototype.validHands = function (hands) {
+        return (hands.length == this.seats) &&
+            this.perSeat.every(function (len, seatNum) { return len == hands[seatNum].length; });
+    };
     DealSignature.prototype.assertValidPageNo = function (pageNo) {
         if (pageNo >= this.pages || pageNo < BigInt(0)) {
             throw new Error("Invalid page " + pageNo + " outside range <=" + this.pages.toString());
@@ -34,6 +41,18 @@ var DealSignature = /** @class */ (function () {
  * A standard bridge signature - four seats, each seat getting 13 cards
  */
 var bridgeSignature = new DealSignature([13, 13, 13, 13]);
+function buildHands(signature, toWhom) {
+    var hands = signature.perSeat.map(function (cards, seat) { return new Array(0); });
+    toWhom.forEach(function (seat, card) {
+        if (signature.validSeat(seat)) {
+            hands[seat].push(card);
+        }
+        else {
+            throw Error('Invalid seat ' + seat + ' for deal in with ' + signature.seats + ' seats');
+        }
+    });
+    return hands;
+}
 /**
  *  A deal which matches a signature
  *
@@ -44,27 +63,19 @@ var bridgeSignature = new DealSignature([13, 13, 13, 13]);
  */
 var NumericDeal = /** @class */ (function () {
     function NumericDeal(sig, toWhom) {
-        var _this = this;
         if (toWhom.length != sig.cards) {
             throw Error('Wrong number of cards in deal. Expected' + sig.cards + ', got ' + toWhom.length);
         }
         this.signature = sig;
         this.toWhom = Array.from(toWhom);
-        // Split deal into hands
-        var hands = this.signature.perSeat.map(function (cards, seat) { return Array(0); });
-        this.toWhom.forEach(function (seat, card) {
-            if (seat >= sig.seats || seat < 0) {
-                throw Error('Invalid seat ' + seat + ' for deal in with ' + sig.seats + ' seats');
-            }
-            hands[seat].push(card);
-        });
-        this.hands = hands;
-        sig.perSeat.forEach(function (cards, seat) {
-            if (cards != _this.hands[seat].length) {
-                throw Error('Wrong number of cards for seat ' + seat + ' expected ' + cards + ' cards');
-            }
-        });
+        this.hands = buildHands(sig, toWhom);
+        this.validateSignature();
     }
+    NumericDeal.prototype.validateSignature = function () {
+        if (!this.signature.validHands(this.hands)) {
+            throw new Error('Invalid deal signature');
+        }
+    };
     return NumericDeal;
 }());
 export { DealSignature, NumericDeal, //classes
