@@ -25,7 +25,7 @@ export function long_gcd(m, n) {
     }
     n = safe_mod(n, m);
     if (n == zero) {
-        return { gcd: n, quotients: quotients };
+        return { gcd: m, quotients: quotients };
     }
     while (true) {
         var q = m / n;

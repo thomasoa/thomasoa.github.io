@@ -1,10 +1,10 @@
 import { BridgeBook } from "../bridge/book.js";
 import { Seats } from "../bridge/constants.js";
-import * as numeric from "../numeric/index.js";
+import { AndrewsStrategy, PavlicekStrategy, scramble_book } from "../numeric/index.js";
 function scramble(strategy) {
     var multiplier = BigInt("13109994191499930367061460371");
     var translation = BigInt("34563463456363563565356345634");
-    return numeric.scramble_book(strategy, multiplier, translation);
+    return scramble_book(strategy, multiplier, translation);
 }
 function edition(book) {
     var scrambledStrat = scramble(book.strategy);
@@ -12,11 +12,11 @@ function edition(book) {
     return { book: book, scrambled: scrambled };
 }
 function pavlicekBook() {
-    var strategy = new numeric.PavlicekStrategy(undefined);
+    var strategy = new PavlicekStrategy(undefined);
     return new BridgeBook(strategy, undefined, undefined);
 }
 function andrewsBook() {
-    var strategy = new numeric.AndrewsStrategy(undefined);
+    var strategy = new AndrewsStrategy(undefined);
     var seatMap = function (seatNumber) { return Seats.all[3 - seatNumber]; };
     return new BridgeBook(strategy, seatMap, undefined);
 }
