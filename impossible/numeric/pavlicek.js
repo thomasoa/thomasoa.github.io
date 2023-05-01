@@ -1,12 +1,3 @@
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
 import { signature_or_default, NumericDeal } from './deal.js';
 var Range = /** @class */ (function () {
     function Range(start, width) {
@@ -25,7 +16,7 @@ var Range = /** @class */ (function () {
 }());
 var Remaining = /** @class */ (function () {
     function Remaining(perSeat, total) {
-        this.perSeat = __spreadArray([], perSeat, true);
+        this.perSeat = Array.from(perSeat);
         this.toWhom = new Array(total);
         this.total = total;
     }

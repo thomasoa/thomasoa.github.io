@@ -1,17 +1,8 @@
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
 // Common numeric deal logic and types
 import { multinomial } from "./choose.js";
 var DealSignature = /** @class */ (function () {
     function DealSignature(cardsPerSeat) {
-        this.perSeat = __spreadArray([], cardsPerSeat, true);
+        this.perSeat = Array.from(cardsPerSeat);
         this.seats = cardsPerSeat.length;
         this.cards = cardsPerSeat.reduce(function (total, nextVal) { return total + nextVal; });
         this.pages = multinomial(cardsPerSeat);
@@ -52,7 +43,7 @@ var NumericDeal = /** @class */ (function () {
             throw Error('Wrong number of cards in deal. Expected' + sig.cards + ', got ' + toWhom.length);
         }
         this.signature = sig;
-        this.toWhom = __spreadArray([], toWhom, true);
+        this.toWhom = Array.from(toWhom);
         // Split deal into hands
         this.hands = this.signature.perSeat.map(function (cards, seat) { return Array(0); });
         this.toWhom.forEach(function (seat, card) {

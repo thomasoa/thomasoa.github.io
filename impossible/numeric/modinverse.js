@@ -43,10 +43,7 @@ export function modular_inverse(modulus, unit) {
     if (modulus < zero) {
         modulus = -modulus;
     }
-    unit = unit % modulus;
-    if (unit < zero) {
-        unit += modulus;
-    }
+    unit = safe_mod(unit, modulus);
     if (unit == zero) {
         throw Error('Unit ' + unit + ' is divible by the modulus ' + modulus);
     }

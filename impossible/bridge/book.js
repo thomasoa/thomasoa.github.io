@@ -2,12 +2,12 @@ import * as C from "./constants.js";
 import { Hand, Deal } from "./deal.js";
 var defaultCardMap = function (card) { return C.Cards[card]; };
 var defaultSeatMap = function (seat) { return C.Seats.all[seat]; };
-function validate_signature(strategy) {
-    var seats = strategy.signature.perSeat.length;
+function validate_signature(signature) {
+    var seats = signature.perSeat.length;
     if (seats != 4) {
         throw new Error("Deal strategy signature should be [13,13,13,13], but has " + seats + " seats");
     }
-    for (var _i = 0, _a = strategy.signature.perSeat; _i < _a.length; _i++) {
+    for (var _i = 0, _a = signature.perSeat; _i < _a.length; _i++) {
         var seatLength = _a[_i];
         if (seatLength != 13) {
             throw new Error("Signature must be [13,13,13,13] but got a seat length of " + seatLength);
@@ -16,7 +16,7 @@ function validate_signature(strategy) {
 }
 var BridgeBook = /** @class */ (function () {
     function BridgeBook(strategy, seatMap, cardMap) {
-        validate_signature(strategy);
+        validate_signature(strategy.signature);
         this.strategy = strategy;
         if (seatMap == undefined) {
             seatMap = defaultSeatMap;
@@ -57,4 +57,4 @@ var BridgeBook = /** @class */ (function () {
     };
     return BridgeBook;
 }());
-export { BridgeBook };
+export { BridgeBook, validate_signature };
