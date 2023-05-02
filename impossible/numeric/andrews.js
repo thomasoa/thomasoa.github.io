@@ -70,7 +70,7 @@ var AndrewsStrategy = /** @class */ (function () {
     });
     AndrewsStrategy.prototype.computePageNumber = function (deal) {
         if (!this.signature.equals(deal.signature)) {
-            throw new Error('Mismatched signatures for Deal and PavlicekStrategy');
+            throw new TypeError('Mismatched signatures for Deal and PavlicekStrategy');
         }
         var sig = this.signature;
         var builders = Array(sig.seats - 1);

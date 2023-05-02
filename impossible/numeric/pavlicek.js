@@ -45,7 +45,7 @@ var Remaining = /** @class */ (function () {
         * Used when computing a deal from a page number
         */
         if (!range.contains(pageNo)) {
-            throw new Error('Invalid page number ' + (pageNo.toString()));
+            throw new RangeError('Invalid page number ' + (pageNo.toString()));
         }
         return this.checkedNextRange(range, pageNo, card);
     };
@@ -102,7 +102,7 @@ var PavlicekStrategy = /** @class */ (function () {
     };
     PavlicekStrategy.prototype.validateSignature = function (deal) {
         if (!this.signature.equals(deal.signature)) {
-            throw new Error('Mismatched signatures for Deal and PavlicekStrategy');
+            throw new TypeError('Mismatched signatures for Deal and PavlicekStrategy');
         }
     };
     PavlicekStrategy.prototype.computePageNumber = function (deal) {

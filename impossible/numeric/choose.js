@@ -3,7 +3,6 @@
 *
 * Caches in a Pascal Triangle of size 52 by default
 */
-//type OptPascalRow = PascalRow | undefined 
 var ChooseCache = /** @class */ (function () {
     function ChooseCache(size) {
         var _this = this;

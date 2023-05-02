@@ -5,7 +5,7 @@ var defaultCardMap = function (card) { return C.Cards[card]; };
 var defaultSeatMap = function (seat) { return C.Seats.all[seat]; };
 function validate_signature(signature) {
     if (!bridgeSignature.equals(signature)) {
-        throw new Error('Invalid signaturre');
+        throw new TypeError('Invalid signature');
     }
 }
 var BridgeBook = /** @class */ (function () {
@@ -14,8 +14,6 @@ var BridgeBook = /** @class */ (function () {
         if (cardMap === void 0) { cardMap = defaultCardMap; }
         validate_signature(strategy.signature);
         this.strategy = strategy;
-        seatMap = seatMap || defaultSeatMap;
-        cardMap = cardMap || defaultCardMap;
         this.seatMap = seatMap;
         this.cardMap = cardMap;
     }
@@ -34,7 +32,7 @@ var BridgeBook = /** @class */ (function () {
     };
     BridgeBook.prototype.getDeal = function (pageNo) {
         if (!this.validPageNumber(pageNo)) {
-            throw Error('Invalid page number ' + pageNo + ', must be between 1 and ' + this.lastPage);
+            throw RangeError('Invalid page number ' + pageNo + ', must be between 1 and ' + this.lastPage);
         }
         var numDeal = this.strategy.computePageContent(pageNo - BigInt(1));
         var seatMap = this.seatMap;

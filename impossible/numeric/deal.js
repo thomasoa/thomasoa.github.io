@@ -23,7 +23,7 @@ var DealSignature = /** @class */ (function () {
     };
     DealSignature.prototype.assertValidPageNo = function (pageNo) {
         if (pageNo >= this.pages || pageNo < BigInt(0)) {
-            throw new Error("Invalid page " + pageNo + " outside range <=" + this.pages.toString());
+            throw new RangeError("Invalid page " + pageNo + " outside range <=" + this.pages.toString());
         }
     };
     DealSignature.prototype.equals = function (otherSig) {
@@ -34,6 +34,24 @@ var DealSignature = /** @class */ (function () {
             return false;
         }
         return this.perSeat.every(function (value, index) { return value == otherSig.perSeat[index]; });
+    };
+    Object.defineProperty(DealSignature.prototype, "bits", {
+        get: function () {
+            this._bits = this._bits || this.computeBits();
+            return this._bits;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    DealSignature.prototype.computeBits = function () {
+        var bits = 0;
+        var pages = this.pages;
+        var two = BigInt(2);
+        while (pages > BigInt(0)) {
+            bits++;
+            pages /= two;
+        }
+        return bits;
     };
     return DealSignature;
 }());
@@ -48,7 +66,7 @@ function buildHands(signature, toWhom) {
             hands[seat].push(card);
         }
         else {
-            throw Error('Invalid seat ' + seat + ' for deal in with ' + signature.seats + ' seats');
+            throw RangeError('Invalid seat ' + seat + ' for deal in with ' + signature.seats + ' seats');
         }
     });
     return hands;
@@ -64,7 +82,7 @@ function buildHands(signature, toWhom) {
 var NumericDeal = /** @class */ (function () {
     function NumericDeal(sig, toWhom) {
         if (toWhom.length != sig.cards) {
-            throw Error('Wrong number of cards in deal. Expected'
+            throw TypeError('Wrong number of cards in deal. Expected'
                 + sig.cards + ', got ' + toWhom.length);
         }
         this.signature = sig;
@@ -74,7 +92,7 @@ var NumericDeal = /** @class */ (function () {
     }
     NumericDeal.prototype.validateSignature = function () {
         if (!this.signature.validHands(this.hands)) {
-            throw new Error('Invalid deal signature');
+            throw new TypeError('Invalid deal signature');
         }
     };
     return NumericDeal;
