@@ -1,0 +1,125 @@
+.invalid { 
+    background: #FFCCCC; 
+}
+
+.invalid:focus { 
+    background: #FFDDDD;
+}
+
+.red { 
+    color: red ;
+}
+
+.na:hover { 
+    color: #006600;
+}
+
+.na { 
+    color: #DDDDDD; 
+    font-size: 70%;
+}
+
+th { 
+     width: 3.5em;
+}
+
+th.key { 
+    width: 9em;
+}
+
+label { 
+    display: inline-block;
+    width: 1em;
+    text-align: right;
+    margin-right: 0.5em;
+}
+
+#topcontainer {
+    position: relative;
+    padding-bottom: 2em;
+}
+
+#handentrycontainer { 
+    position: relative;
+    top: 1em;
+    left: 1em;
+    width: 12em; 
+    font-size: 16pt;
+}
+
+#handentrycontainer input[type=text] { 
+    height: 16pt; 
+    font-size: 14pt; 
+    width: 9em;
+}
+
+#evaluationscontainer {  
+    font-size: 12pt; 
+    display: none;
+    position: absolute;
+    top: 10px;
+    left: 15em;
+}
+
+table#evaluations {
+    border-collapse: collapse;
+    border-bottom: 1px solid black;
+}
+
+
+
+table#evaluations td, table#evaluations th { 
+    text-align: right;
+    border-right: 1px solid black;
+    padding-right: 0.5em;
+}
+tr.total td {
+    font-weight: bold;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+tr.suitH td, tr.suitD td { 
+    background-color: #FFF3F3;
+}
+tr.suitS td, tr.suitC td { 
+    background-color: #EEEEEE;
+}
+
+.notes { 
+    line-height: 1.2em;
+    width: 6in;
+}
+
+.notes {
+   position: relative;
+}
+
+.notes h4 {
+    z-index: 2;
+    width: 100px;
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 1px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.notes h4.selected {
+    background-color: #DDDDDD;
+    border: 1px solid black;
+    border-right: 0px;
+    text-decoration: none;
+}
+
+.notes .section {
+    z-index: 1;
+    border: 1px solid black;
+    background-color: #DDDDDD;
+    position: absolute;
+    display: none;
+    top: 0px;
+    left: 120px;    
+    padding: 1em;
+    min-height: 12em;
+}
