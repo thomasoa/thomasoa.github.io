@@ -30,10 +30,9 @@ $(document).ready(
     var errorDiv = $('form#handentry .error');
     var setErrorState = function(label) {
 	if (label == null) {
-	    errorDiv.hide(0);
+	    errorDiv.text(' ');
         } else {
 	    errorDiv.text(label);
-	    errorDiv.show(0);
 	}
     }
 
@@ -85,7 +84,7 @@ $(document).ready(
 	     } else if (appended) {
                  disableSubmit('Incomplete 10');
 	     } else if (handModel.length==0) {
-		 disableSubmit('Evaluate');
+		 disableSubmit(null);
              } else {
 		 disableSubmit(handModel.length.toString() + " cards");
 	     }
@@ -93,18 +92,27 @@ $(document).ready(
        }
     );
     
-    var pageHandHash = function() {
-        hash = window.location.hash;
-        if (hash==null) {
-            return hash;
-        }
-	return hash.split('&')[0]
+    var popEventHash = function(event) {
+	if (!event.state) {
+	    return null;
+	}
+	return event.state.hash
+    }
+
+    var pageHandHash = function(hash) {
+	if (hash==null) {
+	    return null;
+	}
+	return hash.split('&')[0];
     }
 
     window.onpopstate = function(event) {
-        stateHash = handModel.urlHash()
-        pageHash = pageHandHash()
-	console.log(pageHash);
+	if (event.state!= null && event.state.hash=='#notesPage') {
+            return true;
+	}
+        $.mobile.changePage('#handFormPage',{changeHash: false});
+        stateHash = handModel.urlHash();
+        pageHash = pageHandHash(popEventHash(event));
         if (stateHash==null) {
             if (pageHash != '') {
                 initializeHash();
@@ -117,8 +125,10 @@ $(document).ready(
     var formPanel = $('#handForm');
 
     var handleSubmit = function() {
+	$( document.activeElement ).blur();
 	formPanel.panel('close');
 	var container = $('#evaluationscontainer');
+	$('#blanksection').hide(0);
 	container.hide(250);
         
 	window.location.hash = handModel.urlHash()
@@ -162,7 +172,7 @@ $(document).ready(
      }
 
      var initializeHash=function() {
-         hash = pageHandHash();
+         hash = pageHandHash(window.location.hash);
          clearModel();
          if (hash != '' && hash!='#' || hash!=null) {
             hStrings = hash.substring(1).split(',',4);
@@ -183,13 +193,13 @@ $(document).ready(
 		return;
             } 
 	 }
-	 $('#handForm').panel('open');
 	 $('#evaluationscontainer').hide(500);
+	 $('#blanksection').show(500);
 
      }
 
      
-     initializeHash();
+    initializeHash();
 
     $('#handentry').submit(
       function(e) {
@@ -204,7 +214,9 @@ $(document).ready(
        }
     );
 
-    focusSpades();
+    if (window.location.hash!='#notesPage') {
+	focusSpades();
+    }
   }
 );
   
