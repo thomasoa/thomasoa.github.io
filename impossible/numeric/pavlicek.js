@@ -67,7 +67,8 @@ var Remaining = /** @class */ (function () {
 }());
 var PavlicekStrategy = /** @class */ (function () {
     function PavlicekStrategy(signature) {
-        this.signature = signature || bridgeSignature;
+        if (signature === void 0) { signature = bridgeSignature; }
+        this.signature = signature;
     }
     Object.defineProperty(PavlicekStrategy.prototype, "pages", {
         get: function () { return this.signature.pages; },

@@ -13,13 +13,13 @@ function edition(book) {
     return { normal: book, scrambled: scrambled };
 }
 function pavlicekBook() {
-    var strategy = new PavlicekStrategy(undefined);
-    return new BridgeBook(strategy, undefined, undefined);
+    var strategy = new PavlicekStrategy();
+    return new BridgeBook(strategy);
 }
 function andrewsBook() {
-    var strategy = new AndrewsStrategy(undefined);
+    var strategy = new AndrewsStrategy();
     var seatMap = function (seatNumber) { return Seats.all[3 - seatNumber]; };
-    return new BridgeBook(strategy, seatMap, undefined);
+    return new BridgeBook(strategy, seatMap);
 }
 function build_editions() {
     var editions = new Map();

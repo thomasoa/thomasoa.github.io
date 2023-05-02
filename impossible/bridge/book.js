@@ -10,6 +10,8 @@ function validate_signature(signature) {
 }
 var BridgeBook = /** @class */ (function () {
     function BridgeBook(strategy, seatMap, cardMap) {
+        if (seatMap === void 0) { seatMap = defaultSeatMap; }
+        if (cardMap === void 0) { cardMap = defaultCardMap; }
         validate_signature(strategy.signature);
         this.strategy = strategy;
         seatMap = seatMap || defaultSeatMap;

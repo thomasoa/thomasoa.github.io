@@ -54,7 +54,8 @@ var SequenceBuilder = /** @class */ (function () {
 }());
 var AndrewsStrategy = /** @class */ (function () {
     function AndrewsStrategy(signature) {
-        this.signature = signature || bridgeSignature;
+        if (signature === void 0) { signature = bridgeSignature; }
+        this.signature = signature;
         this.factors = computeFactors(this.signature.perSeat);
     }
     Object.defineProperty(AndrewsStrategy.prototype, "pages", {
