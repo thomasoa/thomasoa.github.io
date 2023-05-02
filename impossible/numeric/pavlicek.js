@@ -42,8 +42,8 @@ var Remaining = /** @class */ (function () {
     };
     Remaining.prototype.nextRange = function (range, pageNo, card) {
         /**
-         * Used when computing a deal from a page number
-         */
+        * Used when computing a deal from a page number
+        */
         if (!range.contains(pageNo)) {
             throw new Error('Invalid page number ' + (pageNo.toString()));
         }
@@ -51,8 +51,8 @@ var Remaining = /** @class */ (function () {
     };
     Remaining.prototype.nextCard = function (card, seat, range) {
         /**
-         * Used when computing a page number from a deal
-         */
+        * Used when computing a page number from a deal
+        */
         var skip = 0;
         for (var skipSeat = 0; skipSeat < seat; skipSeat++) {
             skip += this.perSeat[skipSeat];
@@ -81,8 +81,8 @@ var PavlicekStrategy = /** @class */ (function () {
     });
     Object.defineProperty(PavlicekStrategy.prototype, "baseRange", {
         /**
-         * The range for all pages for this strategy
-         */
+        * The range for all pages for this strategy
+        */
         get: function () {
             return new Range(BigInt(0), this.pages);
         },

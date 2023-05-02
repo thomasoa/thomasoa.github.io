@@ -1,4 +1,7 @@
 import * as C from "./constants.js";
+//import * as numeric from "../numeric/deal.js"
+//type CardMap = (card:numeric.CardNumber) => C.Card
+//type SeatMap = (seat:numeric.SeatNumber) => C.Seat
 var Holding = /** @class */ (function () {
     function Holding(ranks) {
         this.ranks = ranks;

@@ -42,7 +42,7 @@ var DealSignature = /** @class */ (function () {
  */
 var bridgeSignature = new DealSignature([13, 13, 13, 13]);
 function buildHands(signature, toWhom) {
-    var hands = signature.perSeat.map(function (cards, seat) { return new Array(0); });
+    var hands = signature.perSeat.map(function () { return new Array(0); });
     toWhom.forEach(function (seat, card) {
         if (signature.validSeat(seat)) {
             hands[seat].push(card);
@@ -64,7 +64,8 @@ function buildHands(signature, toWhom) {
 var NumericDeal = /** @class */ (function () {
     function NumericDeal(sig, toWhom) {
         if (toWhom.length != sig.cards) {
-            throw Error('Wrong number of cards in deal. Expected' + sig.cards + ', got ' + toWhom.length);
+            throw Error('Wrong number of cards in deal. Expected'
+                + sig.cards + ', got ' + toWhom.length);
         }
         this.signature = sig;
         this.toWhom = Array.from(toWhom);

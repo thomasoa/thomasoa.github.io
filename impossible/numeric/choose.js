@@ -1,12 +1,12 @@
 /*
- * Basic code to compute binomial coefficients.
- *
- * Caches in a Pascal Triangle of size 52 by default
- */
+* Basic code to compute binomial coefficients.
+*
+* Caches in a Pascal Triangle of size 52 by default
+*/
+//type OptPascalRow = PascalRow | undefined 
 var ChooseCache = /** @class */ (function () {
     function ChooseCache(size) {
         var _this = this;
-        //this.rows = Array<PascalRow>(size+1)
         this.rows = Array.from({ length: size + 1 }, function (v, index) { return _this.blankRow(index); });
     }
     Object.defineProperty(ChooseCache.prototype, "size", {
