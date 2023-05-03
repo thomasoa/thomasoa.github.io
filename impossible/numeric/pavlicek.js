@@ -100,13 +100,8 @@ var PavlicekStrategy = /** @class */ (function () {
         }
         return new NumericDeal(sig, remaining.toWhom);
     };
-    PavlicekStrategy.prototype.validateSignature = function (deal) {
-        if (!this.signature.equals(deal.signature)) {
-            throw new TypeError('Mismatched signatures for Deal and PavlicekStrategy');
-        }
-    };
     PavlicekStrategy.prototype.computePageNumber = function (deal) {
-        this.validateSignature(deal);
+        this.signature.assertEqual(deal.signature, 'Mismatched signatures for Deal and PavlicekStrategy');
         var range = this.baseRange;
         var remaining = new Remaining(deal.signature.perSeat, deal.signature.cards);
         deal.toWhom.forEach(function (seat, card) {

@@ -77,8 +77,7 @@ var AndrewsStrategy = /** @class */ (function () {
         return builders;
     };
     AndrewsStrategy.prototype.computePageNumber = function (deal) {
-        this.signature.assertEqual(deal.signature, 'Mismatched signatures for Deal and PavlicekStrategy');
-        var sig = this.signature;
+        this.signature.assertEqual(deal.signature, 'Mismatched signatures for Deal and Strategy');
         var builders = this.makeSequenceBuilders();
         deal.toWhom.forEach(function (whom, card) {
             return builders.forEach(function (builder) { return builder.nextItem(card, whom); });
