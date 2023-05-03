@@ -112,6 +112,9 @@ var Deal = /** @class */ (function () {
         //C.Seats.all.forEach((seat)=> method(seat,hands[seat.order]))
         this.hands.forEach(function (hand, index) { return method(C.Seats.all[index], hand); });
     };
+    Deal.prototype.eachCard = function (method) {
+        this.toWhom.forEach(function (seat, index) { return method(C.Cards[index], seat); });
+    };
     return Deal;
 }());
 export { Holding, Hand, Deal };

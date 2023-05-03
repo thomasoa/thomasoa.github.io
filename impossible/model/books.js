@@ -1,4 +1,4 @@
-import { BridgeBook } from "../bridge/index.js";
+import { BridgeBook, SimpleBijection } from "../bridge/index.js";
 import { Seats } from "../bridge/constants.js";
 import { AndrewsStrategy, PavlicekStrategy, scramble_book } from "../numeric/index.js";
 function scramble(strategy) {
@@ -9,7 +9,7 @@ function scramble(strategy) {
 }
 function edition(book) {
     var scrambledStrat = scramble(book.strategy);
-    var scrambled = new BridgeBook(scrambledStrat, book.seatMap, book.cardMap);
+    var scrambled = new BridgeBook(scrambledStrat, book.seatBijection, book.cardBijection);
     return { normal: book, scrambled: scrambled };
 }
 function pavlicekBook() {
@@ -18,8 +18,8 @@ function pavlicekBook() {
 }
 function andrewsBook() {
     var strategy = new AndrewsStrategy();
-    var seatMap = function (seatNumber) { return Seats.all[3 - seatNumber]; };
-    return new BridgeBook(strategy, seatMap);
+    var seatBijection = new SimpleBijection(Seats.all, function (seatNumber) { return 3 - seatNumber; });
+    return new BridgeBook(strategy, seatBijection);
 }
 function build_editions() {
     var editions = new Map();
@@ -34,8 +34,14 @@ var BookSet = /** @class */ (function () {
     BookSet.prototype.names = function () {
         return Array.from(this.editions.keys());
     };
-    BookSet.prototype.book = function (name, scrambled) {
+    BookSet.prototype.edition = function (name) {
         var edition = this.editions.get(name);
+        if (edition)
+            return edition;
+        throw new Error('Invalid edition name: ' + name);
+    };
+    BookSet.prototype.book = function (name, scrambled) {
+        var edition = this.edition(name);
         if (scrambled) {
             return edition.scrambled;
         }
