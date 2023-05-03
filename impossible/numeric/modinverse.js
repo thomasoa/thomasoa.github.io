@@ -27,7 +27,7 @@ export function long_gcd(m, n) {
     if (n == zero) {
         return { gcd: m, quotients: quotients };
     }
-    while (true) {
+    while (n != zero) {
         var q = m / n;
         var r = m % n;
         if (r == zero) {
@@ -37,6 +37,7 @@ export function long_gcd(m, n) {
         m = n;
         n = r;
     }
+    throw new Error("Impossible condition");
 }
 export function modular_inverse(modulus, unit) {
     var zero = BigInt(0), one = BigInt(1);
