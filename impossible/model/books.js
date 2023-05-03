@@ -65,6 +65,13 @@ var BookSet = /** @class */ (function () {
         });
         return pages;
     };
+    Object.defineProperty(BookSet.prototype, "lastPage", {
+        get: function () {
+            return bridgeSignature.pages;
+        },
+        enumerable: false,
+        configurable: true
+    });
     return BookSet;
 }());
 /* type EditionPage {

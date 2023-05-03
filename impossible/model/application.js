@@ -19,6 +19,13 @@ var Application = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(Application.prototype, "lastPage", {
+        get: function () {
+            return this.books.lastPage;
+        },
+        enumerable: false,
+        configurable: true
+    });
     Application.prototype.nextDeal = function () {
         if (!this.allowNext) {
             throw RangeError('Cannot go to next page');
