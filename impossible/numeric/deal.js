@@ -21,11 +21,6 @@ var DealSignature = /** @class */ (function () {
         return (hands.length == this.seats) &&
             this.perSeat.every(function (len, seatNum) { return len == hands[seatNum].length; });
     };
-    DealSignature.prototype.assertValidPageNo = function (pageNo) {
-        if (pageNo >= this.pages || pageNo < BigInt(0)) {
-            throw new RangeError("Invalid page " + pageNo + " outside range <=" + this.pages.toString());
-        }
-    };
     DealSignature.prototype.equals = function (otherSig) {
         if (this === otherSig) {
             return true;
@@ -43,6 +38,18 @@ var DealSignature = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    DealSignature.prototype.assertEqual = function (otherSig, message) {
+        if (message === void 0) { message = "Unmatching deal signature"; }
+        if (this.equals(otherSig)) {
+            return;
+        }
+        throw new TypeError(message);
+    };
+    DealSignature.prototype.assertValidPageNo = function (pageNo) {
+        if (pageNo >= this.pages || pageNo < BigInt(0)) {
+            throw new RangeError("Invalid page " + pageNo + " outside range <=" + this.pages.toString());
+        }
+    };
     DealSignature.prototype.computeBits = function () {
         var bits = 0;
         var pages = this.pages;

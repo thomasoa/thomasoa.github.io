@@ -68,15 +68,18 @@ var AndrewsStrategy = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    AndrewsStrategy.prototype.computePageNumber = function (deal) {
-        if (!this.signature.equals(deal.signature)) {
-            throw new TypeError('Mismatched signatures for Deal and PavlicekStrategy');
-        }
+    AndrewsStrategy.prototype.makeSequenceBuilders = function () {
         var sig = this.signature;
         var builders = Array(sig.seats - 1);
         for (var i = 1; i < sig.seats; i++) {
             builders[i - 1] = new SequenceBuilder(i, sig.perSeat[i]);
         }
+        return builders;
+    };
+    AndrewsStrategy.prototype.computePageNumber = function (deal) {
+        this.signature.assertEqual(deal.signature, 'Mismatched signatures for Deal and PavlicekStrategy');
+        var sig = this.signature;
+        var builders = this.makeSequenceBuilders();
         deal.toWhom.forEach(function (whom, card) {
             return builders.forEach(function (builder) { return builder.nextItem(card, whom); });
         });
