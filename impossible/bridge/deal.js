@@ -115,6 +115,10 @@ var Deal = /** @class */ (function () {
     Deal.prototype.eachCard = function (method) {
         this.toWhom.forEach(function (seat, index) { return method(C.Cards[index], seat); });
     };
+    Deal.prototype.equals = function (other) {
+        return (this.toWhom.length == other.toWhom.length) &&
+            this.toWhom.every(function (seat, index) { return seat == other.toWhom[index]; });
+    };
     return Deal;
 }());
 export { Holding, Hand, Deal };

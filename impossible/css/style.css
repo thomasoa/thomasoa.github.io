@@ -76,3 +76,13 @@ div, p, li {
     margin-left: auto;
     margin-right:auto;
 }
+
+select {
+    background-color: rgba(255,255,255,0.25)
+}
+
+.page {
+    background-image: url("../img/vintage-paper-book-aged.jpg");
+    padding: 1em;
+}
+  
