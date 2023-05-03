@@ -74,6 +74,10 @@ var Application = /** @class */ (function () {
     Application.prototype.findDeal = function (edition, scrambled, page) {
         this.findDeals(edition, scrambled, [page]);
     };
+    Application.prototype.findPageNumber = function (edition, scrambled, deal) {
+        var book = this.books.book(edition, scrambled);
+        return book.getPageNumber(deal);
+    };
     Object.defineProperty(Application.prototype, "editionNames", {
         get: function () {
             return Array.from(this.books.names());
