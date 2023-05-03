@@ -14,6 +14,9 @@ var DealSignature = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    DealSignature.prototype.toString = function () {
+        return 'DealSignature(' + this.perSeat.toString() + ')';
+    };
     DealSignature.prototype.validSeat = function (seatNum) {
         return seatNum >= 0 && seatNum < this.seats;
     };
@@ -43,7 +46,7 @@ var DealSignature = /** @class */ (function () {
         if (this.equals(otherSig)) {
             return;
         }
-        throw new TypeError(message);
+        throw new TypeError(message + ": Expected " + this.toString() + ", got " + otherSig.toString());
     };
     DealSignature.prototype.assertValidPageNo = function (pageNo) {
         if (pageNo >= this.pages || pageNo < BigInt(0)) {
