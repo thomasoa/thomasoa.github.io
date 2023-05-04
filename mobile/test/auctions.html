@@ -1,0 +1,1730 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="../article.css">
+<link rel="stylesheet" type="text/css" href="../no-table.css">
+<link rel="next" href="complex-auctions.html">
+<link rel="prefetch" href="diagram.html">
+<link rel="SHORTCUT ICON" href="http://www.thomasoandrews.com/icon/bridge.ico">
+<title>Auctions</title>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-5586620-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</head>
+<body>
+<table class="prevandnext"><tr>
+<td class="prev"><a href="diagram.html">&lt;&lt; Hands</a></td>
+<td class="middle">
+<span xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♣</span><span xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♦</span> XML Bridge Tests <span xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span><span xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span>
+</td>
+<td class="next"><a href="complex-auctions.html">Auctions: Exceptions &gt;&gt;</a></td>
+</tr></table>
+<div class="body">
+<h1>Auctions</h1>
+
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>Verbose Auction</h2>
+Input:
+<pre class="testcode">
+&lt;auction dealer="W"&gt;
+    &lt;call seat="W" code="P"/&gt; 
+    &lt;call seat="N" code="1S"/&gt; 
+    &lt;call seat="E" code="2H"/&gt; 
+    &lt;call seat="S" code="3C"/&gt;
+
+    &lt;call seat="W" code="X"/&gt;
+    &lt;call seat="N" code="XX"/&gt;
+    &lt;call seat="E" code="P"/&gt; 
+    &lt;call seat="S" code="P"/&gt; 
+
+    &lt;call seat="W" code="P"/&gt;
+&lt;/auction&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>West</td>
+<td>North</td>
+<td>East</td>
+<td>South</td>
+</tr>
+<tr>
+<td><span class="call">Pass</span></td>
+<td><span class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span></span></td>
+<td><span class="call">2 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span></span></td>
+<td><span class="call">3 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♣</span></span></td>
+</tr>
+<tr>
+<td><span class="call">Dbl</span></td>
+<td><span class="call">Rdbl</span></td>
+<td><span class="call">All Pass</span></td>
+</tr>
+</table></td></tr>
+</table>
+</div>
+<div class="testnote">
+<div class="paragraph">
+We've specified the seat in each call.  In fact, only calls made out
+of turn are required to have a seat specified - when no seat is present,
+the XSL script defaults to the next seat in turn.
+</div>
+</div>
+</div>
+
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>Simple Auction - No dealer specified</h2>
+Input:
+<pre class="testcode">
+&lt;auction&gt;
+    &lt;call code="P"/&gt; 
+    &lt;call code="1S"/&gt; 
+    &lt;call code="2H"/&gt; 
+    &lt;call code="3C"/&gt;
+
+    &lt;call code="X"/&gt;
+    &lt;call code="XX"/&gt;
+    &lt;call code="P"/&gt; 
+    &lt;call code="P"/&gt; 
+
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>Dealer</td>
+<td>LHO</td>
+<td>Partner</td>
+<td>RHO</td>
+</tr>
+<tr>
+<td><span class="call">Pass</span></td>
+<td><span class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span></span></td>
+<td><span class="call">2 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span></span></td>
+<td><span class="call">3 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♣</span></span></td>
+</tr>
+<tr>
+<td><span class="call">Dbl</span></td>
+<td><span class="call">Rdbl</span></td>
+<td><span class="call">All Pass</span></td>
+</tr>
+</table></td></tr>
+</table>
+</div>
+<div class="testnote">
+When no dealer is specified, we label the hands in the auction as
+"Dealer," "LHO," "Partner," and "RHO." Dealer is the leftmost label.
+</div>
+</div>
+
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>Simple Auction - first seat specified</h2>
+Input:
+<pre class="testcode">
+&lt;auction&gt;
+    &lt;call code="P" seat="S"/&gt; 
+    &lt;call code="1S"/&gt; 
+    &lt;call code="2H"/&gt; 
+    &lt;call code="3C"/&gt;
+
+    &lt;call code="X"/&gt;
+    &lt;call code="XX"/&gt;
+    &lt;call code="P"/&gt; 
+    &lt;call code="P"/&gt; 
+
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>South</td>
+<td>West</td>
+<td>North</td>
+<td>East</td>
+</tr>
+<tr>
+<td><span class="call">Pass</span></td>
+<td><span class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span></span></td>
+<td><span class="call">2 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span></span></td>
+<td><span class="call">3 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♣</span></span></td>
+</tr>
+<tr>
+<td><span class="call">Dbl</span></td>
+<td><span class="call">Rdbl</span></td>
+<td><span class="call">All Pass</span></td>
+</tr>
+</table></td></tr>
+</table>
+</div>
+<div class="testnote">
+<div class="paragraph">When no dealer is specified, but the first call has a "seat" id,
+we assume that seat is dealer.</div>
+</div>
+</div>
+
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>Simple Auction - West deals</h2>
+Input:
+<pre class="testcode">
+&lt;auction dealer="W"&gt;
+    &lt;call code="P"/&gt; 
+    &lt;call code="1S"/&gt; 
+    &lt;call code="2H"/&gt; 
+    &lt;call code="3C"/&gt;
+
+    &lt;call code="X"/&gt;
+    &lt;call code="XX"/&gt;
+    &lt;call code="P"/&gt; 
+    &lt;call code="P"/&gt; 
+
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>West</td>
+<td>North</td>
+<td>East</td>
+<td>South</td>
+</tr>
+<tr>
+<td><span class="call">Pass</span></td>
+<td><span class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span></span></td>
+<td><span class="call">2 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span></span></td>
+<td><span class="call">3 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♣</span></span></td>
+</tr>
+<tr>
+<td><span class="call">Dbl</span></td>
+<td><span class="call">Rdbl</span></td>
+<td><span class="call">All Pass</span></td>
+</tr>
+</table></td></tr>
+</table>
+</div>
+<div class="testnote">
+<div class="paragraph">The style guide suggests that West should always be to the left of
+East, for easier reading.  West is taken as the left-most hand in all
+cases except when South is dealer - then South is taken as the
+left-most hand (to avoid the dangling first bid with dealer 
+in the fourth column.)</div>
+<div class="paragraph">Note that the 'X' and 'XX' get translated to <span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">Dbl</span> and
+    <span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">Rdbl</span>.
+</div>
+<div class="paragraph">The white-space in the input above is optional, and used just to
+clarify the auction to someone stuck reading or writing the XML.</div>
+<div class="paragraph">The task of deciding which hand should be left-most in the table
+is reserved for the XSL formatter - the XML document is meant to
+represent the play of the deal, and contain as little formatting
+specifics as possible.
+</div>
+</div>
+</div>
+
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>Simple Auction With Names, South Deals</h2>
+Input:
+<pre class="testcode">
+&lt;auction dealer="S"&gt;
+    &lt;name seat="S"&gt;Andrews&lt;/name&gt;
+    &lt;name seat="N"&gt;Partner&lt;/name&gt;
+    &lt;call code="P"/&gt; 
+    &lt;call code="1S"/&gt; 
+    &lt;call code="2H"/&gt; 
+    &lt;call code="3C"/&gt;
+
+    &lt;call code="X"/&gt;
+    &lt;call code="XX"/&gt;
+    &lt;call code="P"/&gt; 
+    &lt;call code="P"/&gt; 
+
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>South<br>Andrews</td>
+<td>West</td>
+<td>North<br>Partner</td>
+<td>East</td>
+</tr>
+<tr>
+<td><span class="call">Pass</span></td>
+<td><span class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span></span></td>
+<td><span class="call">2 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span></span></td>
+<td><span class="call">3 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♣</span></span></td>
+</tr>
+<tr>
+<td><span class="call">Dbl</span></td>
+<td><span class="call">Rdbl</span></td>
+<td><span class="call">All Pass</span></td>
+</tr>
+</table></td></tr>
+</table>
+</div>
+<div class="testnote">
+When names are provided, add them to the auction.  Keep seat
+names in case there are duplicate names (as in all-GIB auctions.)
+</div>
+</div>
+
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>Simple Auction - East deals</h2>
+Input:
+<pre class="testcode">
+&lt;auction dealer="E"&gt;
+    &lt;call code="P"/&gt; 
+    &lt;call code="1S"/&gt; 
+    &lt;call code="2H"/&gt; 
+    &lt;call code="3C"/&gt;
+
+    &lt;call code="X"/&gt;
+    &lt;call code="XX"/&gt;
+    &lt;call code="P"/&gt; 
+    &lt;call code="P"/&gt; 
+
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>West</td>
+<td>North</td>
+<td>East</td>
+<td>South</td>
+</tr>
+<tr>
+<td><span class="call"></span></td>
+<td><span class="call"></span></td>
+<td><span class="call">Pass</span></td>
+<td><span class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span></span></td>
+</tr>
+<tr>
+<td><span class="call">2 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span></span></td>
+<td><span class="call">3 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♣</span></span></td>
+<td><span class="call">Dbl</span></td>
+<td><span class="call">Rdbl</span></td>
+</tr>
+<tr><td><span class="call">All Pass</span></td></tr>
+</table></td></tr>
+</table>
+</div>
+<div class="testnote">
+When East deals, we put West left-most.
+</div>
+</div>
+
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>Simple Auction - North deals</h2>
+Input:
+<pre class="testcode">
+&lt;auction dealer="N"&gt;
+    &lt;call code="P"/&gt; 
+    &lt;call code="1S"/&gt; 
+    &lt;call code="2H"/&gt; 
+    &lt;call code="3C"/&gt;
+
+    &lt;call code="X"/&gt;
+    &lt;call code="XX"/&gt;
+    &lt;call code="P"/&gt; 
+    &lt;call code="P"/&gt; 
+
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>West</td>
+<td>North</td>
+<td>East</td>
+<td>South</td>
+</tr>
+<tr>
+<td><span class="call"></span></td>
+<td><span class="call">Pass</span></td>
+<td><span class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span></span></td>
+<td><span class="call">2 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span></span></td>
+</tr>
+<tr>
+<td><span class="call">3 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♣</span></span></td>
+<td><span class="call">Dbl</span></td>
+<td><span class="call">Rdbl</span></td>
+<td><span class="call">All Pass</span></td>
+</tr>
+</table></td></tr>
+</table>
+</div>
+<div class="testnote">
+When North deals, West is the left-most hand to keep West's hand to the left of East's hand.
+</div>
+</div>
+
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>Pass Out Auction</h2>
+Input:
+<pre class="testcode">
+&lt;auction dealer="S"&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+
+&lt;hr/&gt;
+
+&lt;auction dealer="W"&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+
+&lt;hr/&gt;
+
+&lt;auction dealer="N"&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+
+&lt;hr/&gt;
+
+&lt;auction dealer="E"&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>South</td>
+<td>West</td>
+<td>North</td>
+<td>East</td>
+</tr>
+<tr><td><span class="call">Pass Out</span></td></tr>
+</table></td></tr>
+</table>
+
+<hr>
+
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>West</td>
+<td>North</td>
+<td>East</td>
+<td>South</td>
+</tr>
+<tr><td><span class="call">Pass Out</span></td></tr>
+</table></td></tr>
+</table>
+
+<hr>
+
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>West</td>
+<td>North</td>
+<td>East</td>
+<td>South</td>
+</tr>
+<tr>
+<td><span class="call"></span></td>
+<td><span class="call">Pass Out</span></td>
+</tr>
+</table></td></tr>
+</table>
+
+<hr>
+
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>West</td>
+<td>North</td>
+<td>East</td>
+<td>South</td>
+</tr>
+<tr>
+<td><span class="call"></span></td>
+<td><span class="call"></span></td>
+<td><span class="call">Pass Out</span></td>
+</tr>
+</table></td></tr>
+</table>
+</div>
+<div class="testnote">
+These should generate one cell with the text "<span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">Pass Out</span>."
+</div>
+</div>
+
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>Fourth Seat Opener</h2>
+Input:
+<pre class="testcode">
+&lt;auction dealer="E"&gt;
+   &lt;call code="P"/&gt;
+   &lt;call code="P"/&gt;
+   &lt;call code="P"/&gt;
+   &lt;call code="1N"/&gt;
+
+   &lt;call code="P"/&gt;
+   &lt;call code="P"/&gt;
+   &lt;call code="P"/&gt;
+&lt;/auction&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>West</td>
+<td>North</td>
+<td>East</td>
+<td>South</td>
+</tr>
+<tr>
+<td><span class="call"></span></td>
+<td><span class="call"></span></td>
+<td><span class="call">Pass</span></td>
+<td><span class="call">Pass</span></td>
+</tr>
+<tr>
+<td><span class="call">Pass</span></td>
+<td><span class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="suit">NT</span></span></td>
+<td><span class="call">All Pass</span></td>
+</tr>
+</table></td></tr>
+</table>
+</div>
+<div class="testnote">
+Make sure auctions starting with three passes don't start with "All Pass."
+</div>
+</div>
+
+
+<h1>Auctions with Notes</h1>
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>One Note</h2>
+Input:
+<pre class="testcode">
+&lt;auction dealer="W"&gt;
+    &lt;call code="1N"&gt;&lt;note&gt;15-17&lt;/note&gt;&lt;/call&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top">
+<td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>West</td>
+<td>North</td>
+<td>East</td>
+<td>South</td>
+</tr>
+<tr>
+<td>
+<span class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="suit">NT</span></span><span class="footnotetag">*</span>
+</td>
+<td><span class="call">All Pass</span></td>
+</tr>
+</table></td>
+<td valign="bottom" class="notes"><div class="auctionnote">*15-17</div></td>
+</tr>
+</table>
+</div>
+<div class="testnote">
+Adding a note to a call internally makes life simple and natural.
+</div>
+</div>
+
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>One Note, Multiple Times</h2>
+Input:
+<pre class="testcode">
+&lt;auction dealer="W"&gt;
+    &lt;call code="1N"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="3S"/&gt;
+    &lt;call code="P"/&gt;
+
+    &lt;call code="4C"&gt;&lt;note id="cue"&gt;Cue bid&lt;/note&gt;&lt;/call&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="4D"&gt;&lt;note ref="cue"/&gt;&lt;/call&gt;
+    &lt;call code="P"/&gt;
+
+    &lt;call code="5D"&gt;&lt;note ref="cue"/&gt;&lt;/call&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="6S"/&gt;
+
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top">
+<td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>West</td>
+<td>North</td>
+<td>East</td>
+<td>South</td>
+</tr>
+<tr>
+<td><span class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="suit">NT</span></span></td>
+<td><span class="call">Pass</span></td>
+<td><span class="call">3 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span></span></td>
+<td><span class="call">Pass</span></td>
+</tr>
+<tr>
+<td>
+<span class="call">4 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♣</span></span><span class="footnotetag">*</span>
+</td>
+<td><span class="call">Pass</span></td>
+<td>
+<span class="call">4 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♦</span></span><span class="footnotetag">*</span>
+</td>
+<td><span class="call">Pass</span></td>
+</tr>
+<tr>
+<td>
+<span class="call">5 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♦</span></span><span class="footnotetag">*</span>
+</td>
+<td><span class="call">Pass</span></td>
+<td><span class="call">6 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span></span></td>
+<td><span class="call">All Pass</span></td>
+</tr>
+</table></td>
+<td valign="bottom" class="notes"><div class="auctionnote">*Cue bid</div></td>
+</tr>
+</table>
+</div>
+<div class="testnote">
+Easy to write duplicate notes.
+</div>
+</div>
+
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>Several Notes on One Bid</h2>
+Input:
+<pre class="testcode">
+&lt;auction&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="1N"&gt;&lt;note&gt;20 second pause&lt;/note&gt;
+                &lt;note&gt;12-14&lt;/note&gt;&lt;/call&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top">
+<td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>Dealer</td>
+<td>LHO</td>
+<td>Partner</td>
+<td>RHO</td>
+</tr>
+<tr>
+<td><span class="call">Pass</span></td>
+<td>
+<span class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="suit">NT</span></span><span class="footnotetag">1,2</span>
+</td>
+<td><span class="call">All Pass</span></td>
+</tr>
+</table></td>
+<td valign="bottom" class="notes">
+<div class="auctionnote">1. 20 second pause</div>
+<div class="auctionnote">2. 12-14</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="testnote">
+Several notes applied to one tag.
+</div>
+</div>
+
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>Several Notes on One Bid - Sorting?</h2>
+Input:
+<pre class="testcode">
+&lt;auction&gt;
+    &lt;call code="1N"/&gt;
+    &lt;call code="P"&gt;&lt;note id="hitch"&gt;Hesitation&lt;/note&gt;&lt;/call&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="2S"&gt;&lt;note&gt;Nominally &lt;spade/&gt; + minor&lt;/note&gt;&lt;note ref="hitch"/&gt;&lt;/call&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top">
+<td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>Dealer</td>
+<td>LHO</td>
+<td>Partner</td>
+<td>RHO</td>
+</tr>
+<tr>
+<td><span class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="suit">NT</span></span></td>
+<td>
+<span class="call">Pass</span><span class="footnotetag">1</span>
+</td>
+<td><span class="call">Pass</span></td>
+<td>
+<span class="call">2 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span></span><span class="footnotetag">2,1</span>
+</td>
+</tr>
+<tr><td><span class="call">All Pass</span></td></tr>
+</table></td>
+<td valign="bottom" class="notes">
+<div class="auctionnote">1. Hesitation</div>
+<div class="auctionnote">2. Nominally <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span> + minor</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="testnote">
+Should we sort comments on individual calls?  I couldn't quite get the XSL to do it.
+</div>
+</div>
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>Several Notes, Some Duplicated</h2>
+Input:
+<pre class="testcode">
+&lt;auction dealer="W"&gt;
+    &lt;call code="1N"&gt;&lt;note&gt;15-17&lt;/note&gt;&lt;/call&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="3S"&gt;&lt;note&gt;Game forcing&lt;/note&gt;&lt;/call&gt;
+    &lt;call code="P"/&gt;
+
+    &lt;call code="4C"&gt;&lt;note&gt;Good spades, club concentration&lt;/note&gt;&lt;/call&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="4D"&gt;&lt;note id="cue"&gt;Cue bid&lt;/note&gt;&lt;/call&gt;
+    &lt;call code="P"/&gt;
+
+    &lt;call code="5D"&gt;&lt;note ref="cue"/&gt;&lt;/call&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="6S"/&gt;
+
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top">
+<td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>West</td>
+<td>North</td>
+<td>East</td>
+<td>South</td>
+</tr>
+<tr>
+<td>
+<span class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="suit">NT</span></span><span class="footnotetag">1</span>
+</td>
+<td><span class="call">Pass</span></td>
+<td>
+<span class="call">3 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span></span><span class="footnotetag">2</span>
+</td>
+<td><span class="call">Pass</span></td>
+</tr>
+<tr>
+<td>
+<span class="call">4 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♣</span></span><span class="footnotetag">3</span>
+</td>
+<td><span class="call">Pass</span></td>
+<td>
+<span class="call">4 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♦</span></span><span class="footnotetag">4</span>
+</td>
+<td><span class="call">Pass</span></td>
+</tr>
+<tr>
+<td>
+<span class="call">5 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♦</span></span><span class="footnotetag">4</span>
+</td>
+<td><span class="call">Pass</span></td>
+<td><span class="call">6 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span></span></td>
+<td><span class="call">All Pass</span></td>
+</tr>
+</table></td>
+<td valign="bottom" class="notes">
+<div class="auctionnote">1. 15-17</div>
+<div class="auctionnote">2. Game forcing</div>
+<div class="auctionnote">3. Good spades, club concentration</div>
+<div class="auctionnote">4. Cue bid</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="testnote">
+Easy to write duplicate notes.
+</div>
+</div>
+
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>Note In Last Three Passes</h2>
+Input:
+<pre class="testcode">
+&lt;auction dealer="W"&gt;
+    &lt;call code="1N"/&gt;
+    &lt;call code="P"&gt;&lt;note&gt;Hesitation&lt;/note&gt;&lt;/call&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+&lt;hr/&gt;
+&lt;auction dealer="W"&gt;
+    &lt;call code="1N"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"&gt;&lt;note&gt;Hesitation&lt;/note&gt;&lt;/call&gt;
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+&lt;hr/&gt;
+&lt;auction dealer="W"&gt;
+    &lt;call code="1N"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"&gt;&lt;note&gt;Hesitation&lt;/note&gt;&lt;/call&gt;
+&lt;/auction&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top">
+<td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>West</td>
+<td>North</td>
+<td>East</td>
+<td>South</td>
+</tr>
+<tr>
+<td><span class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="suit">NT</span></span></td>
+<td>
+<span class="call">Pass</span><span class="footnotetag">*</span>
+</td>
+<td><span class="call">Pass</span></td>
+<td><span class="call">Pass</span></td>
+</tr>
+</table></td>
+<td valign="bottom" class="notes"><div class="auctionnote">*Hesitation</div></td>
+</tr>
+</table>
+<hr>
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top">
+<td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>West</td>
+<td>North</td>
+<td>East</td>
+<td>South</td>
+</tr>
+<tr>
+<td><span class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="suit">NT</span></span></td>
+<td><span class="call">Pass</span></td>
+<td>
+<span class="call">Pass</span><span class="footnotetag">*</span>
+</td>
+<td><span class="call">Pass</span></td>
+</tr>
+</table></td>
+<td valign="bottom" class="notes"><div class="auctionnote">*Hesitation</div></td>
+</tr>
+</table>
+<hr>
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top">
+<td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>West</td>
+<td>North</td>
+<td>East</td>
+<td>South</td>
+</tr>
+<tr>
+<td><span class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="suit">NT</span></span></td>
+<td><span class="call">Pass</span></td>
+<td><span class="call">Pass</span></td>
+<td>
+<span class="call">Pass</span><span class="footnotetag">*</span>
+</td>
+</tr>
+</table></td>
+<td valign="bottom" class="notes"><div class="auctionnote">*Hesitation</div></td>
+</tr>
+</table>
+</div>
+<div class="testnote">
+If there is a note applied to one of the last three
+passes, write out the passes explicitly.
+</div>
+</div>
+
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>Note In Pass-out Auctions</h2>
+Input:
+<pre class="testcode">
+&lt;auction&gt;
+    &lt;call code="P"&gt;&lt;note&gt;Hesitation&lt;/note&gt;&lt;/call&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+&lt;hr/&gt;
+&lt;auction&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"&gt;&lt;note&gt;Hesitation&lt;/note&gt;&lt;/call&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+&lt;hr/&gt;
+&lt;auction&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"&gt;&lt;note&gt;Hesitation&lt;/note&gt;&lt;/call&gt;
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+&lt;hr/&gt;
+&lt;auction&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"&gt;&lt;note&gt;Hesitation&lt;/note&gt;&lt;/call&gt;
+&lt;/auction&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top">
+<td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>Dealer</td>
+<td>LHO</td>
+<td>Partner</td>
+<td>RHO</td>
+</tr>
+<tr>
+<td>
+<span class="call">Pass</span><span class="footnotetag">*</span>
+</td>
+<td><span class="call">Pass</span></td>
+<td><span class="call">Pass</span></td>
+<td><span class="call">Pass</span></td>
+</tr>
+</table></td>
+<td valign="bottom" class="notes"><div class="auctionnote">*Hesitation</div></td>
+</tr>
+</table>
+<hr>
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top">
+<td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>Dealer</td>
+<td>LHO</td>
+<td>Partner</td>
+<td>RHO</td>
+</tr>
+<tr>
+<td><span class="call">Pass</span></td>
+<td>
+<span class="call">Pass</span><span class="footnotetag">*</span>
+</td>
+<td><span class="call">Pass</span></td>
+<td><span class="call">Pass</span></td>
+</tr>
+</table></td>
+<td valign="bottom" class="notes"><div class="auctionnote">*Hesitation</div></td>
+</tr>
+</table>
+<hr>
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top">
+<td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>Dealer</td>
+<td>LHO</td>
+<td>Partner</td>
+<td>RHO</td>
+</tr>
+<tr>
+<td><span class="call">Pass</span></td>
+<td><span class="call">Pass</span></td>
+<td>
+<span class="call">Pass</span><span class="footnotetag">*</span>
+</td>
+<td><span class="call">Pass</span></td>
+</tr>
+</table></td>
+<td valign="bottom" class="notes"><div class="auctionnote">*Hesitation</div></td>
+</tr>
+</table>
+<hr>
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top">
+<td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>Dealer</td>
+<td>LHO</td>
+<td>Partner</td>
+<td>RHO</td>
+</tr>
+<tr>
+<td><span class="call">Pass</span></td>
+<td><span class="call">Pass</span></td>
+<td><span class="call">Pass</span></td>
+<td>
+<span class="call">Pass</span><span class="footnotetag">*</span>
+</td>
+</tr>
+</table></td>
+<td valign="bottom" class="notes"><div class="auctionnote">*Hesitation</div></td>
+</tr>
+</table>
+</div>
+<div class="testnote">
+If the auction is passed out and there is a note in one pass,
+then show all passes.
+</div>
+</div>
+
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>Editorial Comments with '!' or '?'</h2>
+Input:
+<pre class="testcode">
+&lt;auction dealer="W"&gt;
+    &lt;call code="1N" comment="?"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="7N" comment="!"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>West</td>
+<td>North</td>
+<td>East</td>
+<td>South</td>
+</tr>
+<tr>
+<td>
+<span class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="suit">NT</span></span>?</td>
+<td><span class="call">Pass</span></td>
+<td>
+<span class="call">7 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="suit">NT</span></span>!</td>
+<td><span class="call">All Pass</span></td>
+</tr>
+</table></td></tr>
+</table>
+</div>
+<div class="testnote">
+The comment is meant as inline editorials, rather than the footnote
+"note" method, above.  Pavlicek's style guide suggests that only one
+'?' or one '!' be used in this instance.  My processors don't enforce
+that rule, but I follow it when writing my documents.
+</div>
+</div>
+
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>Editorial Comment among the last three passes</h2>
+Input:
+<pre class="testcode">
+&lt;auction dealer="E"&gt;
+    &lt;call code="1N"/&gt;
+    &lt;call code="P" comment="?"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+&lt;hr/&gt;
+&lt;auction dealer="E"&gt;
+    &lt;call code="1N"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P" comment="?"/&gt;
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+&lt;hr/&gt;
+&lt;auction dealer="E"&gt;
+    &lt;call code="1N"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P" comment="?"/&gt;
+&lt;/auction&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>West</td>
+<td>North</td>
+<td>East</td>
+<td>South</td>
+</tr>
+<tr>
+<td><span class="call"></span></td>
+<td><span class="call"></span></td>
+<td><span class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="suit">NT</span></span></td>
+<td>
+<span class="call">Pass</span>?</td>
+</tr>
+<tr>
+<td><span class="call">Pass</span></td>
+<td><span class="call">Pass</span></td>
+</tr>
+</table></td></tr>
+</table>
+<hr>
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>West</td>
+<td>North</td>
+<td>East</td>
+<td>South</td>
+</tr>
+<tr>
+<td><span class="call"></span></td>
+<td><span class="call"></span></td>
+<td><span class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="suit">NT</span></span></td>
+<td><span class="call">Pass</span></td>
+</tr>
+<tr>
+<td>
+<span class="call">Pass</span>?</td>
+<td><span class="call">Pass</span></td>
+</tr>
+</table></td></tr>
+</table>
+<hr>
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>West</td>
+<td>North</td>
+<td>East</td>
+<td>South</td>
+</tr>
+<tr>
+<td><span class="call"></span></td>
+<td><span class="call"></span></td>
+<td><span class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="suit">NT</span></span></td>
+<td><span class="call">Pass</span></td>
+</tr>
+<tr>
+<td><span class="call">Pass</span></td>
+<td>
+<span class="call">Pass</span>?</td>
+</tr>
+</table></td></tr>
+</table>
+</div>
+<div class="testnote">
+Show all calls if there is a comment added to one of the last three passes.
+</div>
+</div>
+
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>Editorial Comment in passed-out auctions</h2>
+Input:
+<pre class="testcode">
+&lt;auction dealer="E"&gt;
+    &lt;call code="P" comment="?"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+&lt;hr/&gt;
+&lt;auction dealer="E"&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P" comment="?"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+&lt;hr/&gt;
+&lt;auction dealer="E"&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P" comment="?"/&gt;
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+&lt;hr/&gt;
+&lt;auction dealer="E"&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P" comment="?"/&gt;
+&lt;/auction&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>West</td>
+<td>North</td>
+<td>East</td>
+<td>South</td>
+</tr>
+<tr>
+<td><span class="call"></span></td>
+<td><span class="call"></span></td>
+<td>
+<span class="call">Pass</span>?</td>
+<td><span class="call">All Pass</span></td>
+</tr>
+</table></td></tr>
+</table>
+<hr>
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>West</td>
+<td>North</td>
+<td>East</td>
+<td>South</td>
+</tr>
+<tr>
+<td><span class="call"></span></td>
+<td><span class="call"></span></td>
+<td><span class="call">Pass</span></td>
+<td>
+<span class="call">Pass</span>?</td>
+</tr>
+<tr>
+<td><span class="call">Pass</span></td>
+<td><span class="call">Pass</span></td>
+</tr>
+</table></td></tr>
+</table>
+<hr>
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>West</td>
+<td>North</td>
+<td>East</td>
+<td>South</td>
+</tr>
+<tr>
+<td><span class="call"></span></td>
+<td><span class="call"></span></td>
+<td><span class="call">Pass</span></td>
+<td><span class="call">Pass</span></td>
+</tr>
+<tr>
+<td>
+<span class="call">Pass</span>?</td>
+<td><span class="call">Pass</span></td>
+</tr>
+</table></td></tr>
+</table>
+<hr>
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>West</td>
+<td>North</td>
+<td>East</td>
+<td>South</td>
+</tr>
+<tr>
+<td><span class="call"></span></td>
+<td><span class="call"></span></td>
+<td><span class="call">Pass</span></td>
+<td><span class="call">Pass</span></td>
+</tr>
+<tr>
+<td><span class="call">Pass</span></td>
+<td>
+<span class="call">Pass</span>?</td>
+</tr>
+</table></td></tr>
+</table>
+</div>
+<div class="testnote">
+Show all calls if there is a comment in a pass-out auction.  Currently,
+the first case is "broken," or this behavior could be seen as a feature.
+</div>
+</div>
+
+<h1>Incomplete Auctions</h1>
+
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>Passes</h2>
+Input:
+<pre class="testcode">
+&lt;auction&gt;
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+&lt;hr/&gt;
+&lt;auction&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+&lt;hr/&gt;
+&lt;auction&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>Dealer</td>
+<td>LHO</td>
+<td>Partner</td>
+<td>RHO</td>
+</tr>
+<tr><td><span class="call">Pass</span></td></tr>
+</table></td></tr>
+</table>
+<hr>
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>Dealer</td>
+<td>LHO</td>
+<td>Partner</td>
+<td>RHO</td>
+</tr>
+<tr>
+<td><span class="call">Pass</span></td>
+<td><span class="call">Pass</span></td>
+</tr>
+</table></td></tr>
+</table>
+<hr>
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>Dealer</td>
+<td>LHO</td>
+<td>Partner</td>
+<td>RHO</td>
+</tr>
+<tr>
+<td><span class="call">Pass</span></td>
+<td><span class="call">Pass</span></td>
+<td><span class="call">Pass</span></td>
+</tr>
+</table></td></tr>
+</table>
+</div>
+<div class="testnote">
+Make sure that three passes don't get translated to "All Pass."
+</div>
+</div>
+
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>No Pass at the End</h2>
+Input:
+<pre class="testcode">
+&lt;auction&gt;
+    &lt;call code="1N"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="3D"/&gt;
+&lt;/auction&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>Dealer</td>
+<td>LHO</td>
+<td>Partner</td>
+<td>RHO</td>
+</tr>
+<tr>
+<td><span class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="suit">NT</span></span></td>
+<td><span class="call">Pass</span></td>
+<td><span class="call">3 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♦</span></span></td>
+</tr>
+</table></td></tr>
+</table>
+</div>
+<div class="testnote">
+No pass at the end of an auction.
+</div>
+</div>
+
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>One Pass at the End</h2>
+Input:
+<pre class="testcode">
+&lt;auction&gt;
+    &lt;call code="1N"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="3D"/&gt;
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>Dealer</td>
+<td>LHO</td>
+<td>Partner</td>
+<td>RHO</td>
+</tr>
+<tr>
+<td><span class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="suit">NT</span></span></td>
+<td><span class="call">Pass</span></td>
+<td><span class="call">3 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♦</span></span></td>
+<td><span class="call">Pass</span></td>
+</tr>
+</table></td></tr>
+</table>
+</div>
+<div class="testnote">
+One pass at the end of an auction.
+</div>
+</div>
+
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>Two Pass at the End</h2>
+Input:
+<pre class="testcode">
+&lt;auction&gt;
+    &lt;call code="1N"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="3D"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+&lt;/auction&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>Dealer</td>
+<td>LHO</td>
+<td>Partner</td>
+<td>RHO</td>
+</tr>
+<tr>
+<td><span class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="suit">NT</span></span></td>
+<td><span class="call">Pass</span></td>
+<td><span class="call">3 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♦</span></span></td>
+<td><span class="call">Pass</span></td>
+</tr>
+<tr><td><span class="call">Pass</span></td></tr>
+</table></td></tr>
+</table>
+</div>
+<div class="testnote">
+Two passes at the end of an auction.
+</div>
+</div>
+
+<h1>Incomplete Auctions with Query</h1>
+
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>Passes</h2>
+Input:
+<pre class="testcode">
+&lt;auction&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="?"/&gt;
+&lt;/auction&gt;
+&lt;hr/&gt;
+&lt;auction&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="?"/&gt;
+&lt;/auction&gt;
+&lt;hr/&gt;
+&lt;auction&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="?"/&gt;
+&lt;/auction&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>Dealer</td>
+<td>LHO</td>
+<td>Partner</td>
+<td>RHO</td>
+</tr>
+<tr>
+<td><span class="call">Pass</span></td>
+<td><span class="call">?</span></td>
+</tr>
+</table></td></tr>
+</table>
+<hr>
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>Dealer</td>
+<td>LHO</td>
+<td>Partner</td>
+<td>RHO</td>
+</tr>
+<tr>
+<td><span class="call">Pass</span></td>
+<td><span class="call">Pass</span></td>
+<td><span class="call">?</span></td>
+</tr>
+</table></td></tr>
+</table>
+<hr>
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>Dealer</td>
+<td>LHO</td>
+<td>Partner</td>
+<td>RHO</td>
+</tr>
+<tr>
+<td><span class="call">Pass</span></td>
+<td><span class="call">Pass</span></td>
+<td><span class="call">Pass</span></td>
+<td><span class="call">?</span></td>
+</tr>
+</table></td></tr>
+</table>
+</div>
+<div class="testnote">
+Make sure that three passes don't get translated to "All Pass."
+</div>
+</div>
+
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>No Pass at the End</h2>
+Input:
+<pre class="testcode">
+&lt;auction&gt;
+    &lt;call code="1N"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="3D"/&gt;
+    &lt;call code="?"/&gt;
+&lt;/auction&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>Dealer</td>
+<td>LHO</td>
+<td>Partner</td>
+<td>RHO</td>
+</tr>
+<tr>
+<td><span class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="suit">NT</span></span></td>
+<td><span class="call">Pass</span></td>
+<td><span class="call">3 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♦</span></span></td>
+<td><span class="call">?</span></td>
+</tr>
+</table></td></tr>
+</table>
+</div>
+<div class="testnote">
+No pass at the end of an auction.
+</div>
+</div>
+
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>One Pass at the End</h2>
+Input:
+<pre class="testcode">
+&lt;auction&gt;
+    &lt;call code="1N"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="3D"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="?"/&gt;
+&lt;/auction&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>Dealer</td>
+<td>LHO</td>
+<td>Partner</td>
+<td>RHO</td>
+</tr>
+<tr>
+<td><span class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="suit">NT</span></span></td>
+<td><span class="call">Pass</span></td>
+<td><span class="call">3 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♦</span></span></td>
+<td><span class="call">Pass</span></td>
+</tr>
+<tr><td><span class="call">?</span></td></tr>
+</table></td></tr>
+</table>
+</div>
+<div class="testnote">
+One pass at the end of an auction.
+</div>
+</div>
+
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>Two Pass at the End</h2>
+Input:
+<pre class="testcode">
+&lt;auction&gt;
+    &lt;call code="1N"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="3D"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="P"/&gt;
+    &lt;call code="?"/&gt;
+&lt;/auction&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<table xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="auctionplusnotes">
+<colgroup span="4" width="25%"></colgroup>
+<tr valign="top"><td><table class="auctiontable">
+<tr class="heading" valign="top">
+<td>Dealer</td>
+<td>LHO</td>
+<td>Partner</td>
+<td>RHO</td>
+</tr>
+<tr>
+<td><span class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="suit">NT</span></span></td>
+<td><span class="call">Pass</span></td>
+<td><span class="call">3 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♦</span></span></td>
+<td><span class="call">Pass</span></td>
+</tr>
+<tr>
+<td><span class="call">Pass</span></td>
+<td><span class="call">?</span></td>
+</tr>
+</table></td></tr>
+</table>
+</div>
+<div class="testnote">
+Two passes at the end of an auction.
+</div>
+</div>
+
+</div>
+<table class="prevandnext"><tr>
+<td class="prev"><a href="diagram.html">&lt;&lt; Hands</a></td>
+<td class="middle"><div class="signature">Thomas Andrews
+(<a href="mailto:bridge@thomasoandrews.com">bridge@thomasoandrews.com</a>),
+© 2002-2009.
+</div></td>
+<td class="next"><a href="complex-auctions.html">Auctions: Exceptions &gt;&gt;</a></td>
+</tr></table>
+<div class="signature">
+Article formatted with <a href="http://bridge.thomasoandrews.com/xml/">BridgeML</a>.
+</div>
+</body>
+</html>
