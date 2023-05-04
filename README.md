@@ -9,5 +9,5 @@
       - [Doubly-asymmetric deals](articles/tenaces/index.html)
       - [Everybody Makes](articles/everybody/index.html)
       - [Everybody makes 1S](articles/all1S/index.html)
-      - [Test documents](articles/tests/index.html)
+      - [Test documents](articles/test/index.html)
 
