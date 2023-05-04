@@ -1,0 +1,127 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="../article.css">
+<link rel="stylesheet" type="text/css" href="../no-table.css">
+<link rel="next" href="inline-holdings.html">
+<link rel="prefetch" href="intro.html">
+<link rel="SHORTCUT ICON" href="http://www.thomasoandrews.com/icon/bridge.ico">
+<title>Calls and Contracts</title>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-5586620-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</head>
+<body>
+<table class="prevandnext"><tr>
+<td class="prev"><a href="intro.html">&lt;&lt; Introduction</a></td>
+<td class="middle">
+<span xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♣</span><span xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♦</span> XML Bridge Tests <span xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span><span xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span>
+</td>
+<td class="next"><a href="inline-holdings.html">Cards and Holdings &gt;&gt;</a></td>
+</tr></table>
+<div class="body">
+<h1>Calls and Contracts</h1>
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>All Calls</h2>
+Input:
+<pre class="testcode">
+&lt;p&gt;Calls: 
+&lt;call code="P"/&gt;, &lt;call code="X"/&gt;, &lt;call code="XX"/&gt;,
+&lt;call code="1C"/&gt;, &lt;call code="1D"/&gt;, &lt;call code="1H"/&gt;, 
+&lt;call code="1S"/&gt;, &lt;call code="1N"/&gt;,
+&lt;call code="2C"/&gt;, &lt;call code="2D"/&gt;, &lt;call code="2H"/&gt;, 
+&lt;call code="2S"/&gt;, &lt;call code="2N"/&gt;,
+&lt;call code="3C"/&gt;, &lt;call code="3D"/&gt;, &lt;call code="3H"/&gt;, 
+&lt;call code="3S"/&gt;, &lt;call code="3N"/&gt;,
+&lt;call code="4C"/&gt;, &lt;call code="4D"/&gt;, &lt;call code="4H"/&gt;, 
+&lt;call code="4S"/&gt;, &lt;call code="4N"/&gt;,
+&lt;call code="5C"/&gt;, &lt;call code="5D"/&gt;, &lt;call code="5H"/&gt;, 
+&lt;call code="5S"/&gt;, &lt;call code="5N"/&gt;,
+&lt;call code="6C"/&gt;, &lt;call code="6D"/&gt;, &lt;call code="6H"/&gt;, 
+&lt;call code="6S"/&gt;, &lt;call code="6N"/&gt;,
+&lt;call code="7C"/&gt;, &lt;call code="7D"/&gt;, &lt;call code="7H"/&gt;, 
+&lt;call code="7S"/&gt;, &lt;call code="7N"/&gt;.
+&lt;/p&gt; 
+</pre>
+XSL Output:
+<div class="testoutput">
+<div class="paragraph">Calls: 
+<span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">Pass</span>, <span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">Dbl</span>, <span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">Rdbl</span>,
+<span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♣</span></span>, <span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♦</span></span>, <span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span></span>, 
+<span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span></span>, <span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">1 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="suit">NT</span></span>,
+<span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">2 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♣</span></span>, <span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">2 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♦</span></span>, <span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">2 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span></span>, 
+<span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">2 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span></span>, <span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">2 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="suit">NT</span></span>,
+<span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">3 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♣</span></span>, <span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">3 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♦</span></span>, <span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">3 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span></span>, 
+<span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">3 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span></span>, <span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">3 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="suit">NT</span></span>,
+<span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">4 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♣</span></span>, <span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">4 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♦</span></span>, <span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">4 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span></span>, 
+<span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">4 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span></span>, <span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">4 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="suit">NT</span></span>,
+<span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">5 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♣</span></span>, <span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">5 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♦</span></span>, <span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">5 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span></span>, 
+<span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">5 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span></span>, <span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">5 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="suit">NT</span></span>,
+<span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">6 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♣</span></span>, <span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">6 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♦</span></span>, <span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">6 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span></span>, 
+<span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">6 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span></span>, <span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">6 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="suit">NT</span></span>,
+<span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">7 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♣</span></span>, <span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">7 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♦</span></span>, <span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">7 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span></span>, 
+<span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">7 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span></span>, <span xmlns:call="http://www.thomasoandrews.com/xmlns/bridge#call" class="call">7 <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="suit">NT</span></span>.
+</div> 
+</div>
+<div class="testnote">
+All possible calls.  Calls are formatted with spaces between the suit and
+the symbol, as per Pavlicek.  Line breaks should not occur mid-call - this is
+controlled by the CSS file.  There should be no spaces after the suit
+symbols and before the next character (commas and periods above.) 
+</div>
+</div>
+
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>Contracts</h2>
+Input:
+<pre class="testcode">
+&lt;p&gt;Contract: &lt;contract code="4C" declarer="S"/&gt;&lt;/p&gt;
+
+&lt;p&gt;Contract: &lt;contract code="5S"/&gt;&lt;/p&gt;
+
+&lt;p&gt; When you have a choice of
+    &lt;contract code="4SXX" declarer="S"/&gt; 
+    or &lt;contract code="5DX" declarer="N"/&gt;,
+    you'll probably prefer the diamond contract,
+    unless you are a risk-taker.
+&lt;/p&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<div class="paragraph">Contract: <abbr xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="contract" title="Four clubs by South">4 <span class="blacksuit">♣</span> by South</abbr>
+</div>
+
+<div class="paragraph">Contract: <abbr xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="contract" title="Five spades">5 <span class="blacksuit">♠</span></abbr>
+</div>
+
+<div class="paragraph"> When you have a choice of
+    <abbr xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="contract" title="Four spades redoubled by South">4 <span class="blacksuit">♠</span> xx by South</abbr> 
+    or <abbr xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="contract" title="Five diamonds doubled by North">5 <span class="redsuit">♦</span> x by North</abbr>,
+    you'll probably prefer the diamond contract,
+    unless you are a risk-taker.
+</div>
+</div>
+<div class="testnote">
+Some example contracts.
+</div>
+</div>
+
+</div>
+<table class="prevandnext"><tr>
+<td class="prev"><a href="intro.html">&lt;&lt; Introduction</a></td>
+<td class="middle"><div class="signature">Thomas Andrews
+(<a href="mailto:bridge@thomasoandrews.com">bridge@thomasoandrews.com</a>),
+© 2002-2009.
+</div></td>
+<td class="next"><a href="inline-holdings.html">Cards and Holdings &gt;&gt;</a></td>
+</tr></table>
+<div class="signature">
+Article formatted with <a href="http://bridge.thomasoandrews.com/xml/">BridgeML</a>.
+</div>
+</body>
+</html>

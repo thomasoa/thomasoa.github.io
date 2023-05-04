@@ -1,0 +1,114 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="../article.css">
+<link rel="stylesheet" type="text/css" href="../no-table.css">
+<link rel="next" href="diagram.html">
+<link rel="prefetch" href="inline-auctions.html">
+<link rel="SHORTCUT ICON" href="http://www.thomasoandrews.com/icon/bridge.ico">
+<title>Suit Symbols</title>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-5586620-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</head>
+<body>
+<table class="prevandnext"><tr>
+<td class="prev"><a href="inline-auctions.html">&lt;&lt; Inline Auctions</a></td>
+<td class="middle">
+<span xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♣</span><span xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♦</span> XML Bridge Tests <span xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span><span xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span>
+</td>
+<td class="next"><a href="diagram.html">Hands &gt;&gt;</a></td>
+</tr></table>
+<div class="body">
+<h1>Suit Symbols</h1>
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>All of them</h2>
+Input:
+<pre class="testcode">
+&lt;p&gt;Spade symbol: &lt;spade/&gt;, heart symbol: &lt;heart/&gt;,
+diamond symbol: &lt;diamond/&gt;, and club symbol: &lt;club/&gt;.&lt;/p&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<div class="paragraph">Spade symbol: <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span>, heart symbol: <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span>,
+diamond symbol: <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♦</span>, and club symbol: <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♣</span>.</div>
+</div>
+<div class="testnote">
+Suit symbols can be included in any text.  These forms are
+rarely used, but can be used in some instances, for example,
+when you need a really brief description of a bid.  When writing
+out a bid, see <a target="display" href="inline-calls.html">Calls</a>.  When
+writing out a card or holding, use 
+<a target="display" href="inline-holdings.html">Cards and Holdings</a>.
+</div>
+</div>
+
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>Don't do this</h2>
+Input:
+<pre class="testcode">
+&lt;p&gt;
+You could use suit symbols rather than &lt;call&gt;,
+&lt;holding&gt;, etc., but then the formatter will not
+know to do smart formatting things.  For example, 
+you could write out cards as: &lt;spade/&gt; A, &lt;spade/&gt; K, 
+&lt;spade/&gt; Q, &lt;spade/&gt; J, &lt;spade/&gt; 10, &lt;spade/&gt; 9,
+&lt;spade/&gt; 8, &lt;spade/&gt; 7, &lt;spade/&gt; 6, &lt;spade/&gt; 5, 
+&lt;spade/&gt; 4, &lt;spade/&gt; 3, &lt;spade/&gt; 2, &lt;heart/&gt; A, &lt;heart/&gt; K, 
+&lt;heart/&gt; Q, &lt;heart/&gt; J, &lt;heart/&gt; 10, &lt;heart/&gt; 9,
+&lt;heart/&gt; 8, &lt;heart/&gt; 7, &lt;heart/&gt; 6, &lt;heart/&gt; 5, 
+&lt;heart/&gt; 4, &lt;heart/&gt; 3, &lt;heart/&gt; 2.  But then you might
+see breaks in the middle of cards, obscuring your document.
+&lt;/p&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+<div class="paragraph">
+You could use suit symbols rather than &lt;call&gt;,
+&lt;holding&gt;, etc., but then the formatter will not
+know to do smart formatting things.  For example, 
+you could write out cards as: <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span> A, <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span> K, 
+<span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span> Q, <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span> J, <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span> 10, <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span> 9,
+<span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span> 8, <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span> 7, <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span> 6, <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span> 5, 
+<span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span> 4, <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span> 3, <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span> 2, <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span> A, <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span> K, 
+<span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span> Q, <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span> J, <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span> 10, <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span> 9,
+<span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span> 8, <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span> 7, <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span> 6, <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span> 5, 
+<span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span> 4, <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span> 3, <span xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span> 2.  But then you might
+see breaks in the middle of cards, obscuring your document.
+</div>
+</div>
+<div class="testnote">
+<div class="paragraph">
+Other reasons to avoid this might be issues of "accessability" - you might
+want to generate a version of your document for the blind, in which
+case, you'd want to change &lt;spade card="Q"/&gt; to the words
+"spade queen," so that the user's client could read the words out
+loud.  In XML, as a rule, you do not want to make formatting decisions
+too early, so that if you want to alter some of the overall look of your
+documents, you'd have to change every individual document.
+</div>
+<div class="paragraph">
+In other words, don't do this.
+</div>
+</div>
+</div>
+
+</div>
+<table class="prevandnext"><tr>
+<td class="prev"><a href="inline-auctions.html">&lt;&lt; Inline Auctions</a></td>
+<td class="middle"><div class="signature">Thomas Andrews
+(<a href="mailto:bridge@thomasoandrews.com">bridge@thomasoandrews.com</a>),
+© 2002-2009.
+</div></td>
+<td class="next"><a href="diagram.html">Hands &gt;&gt;</a></td>
+</tr></table>
+<div class="signature">
+Article formatted with <a href="http://bridge.thomasoandrews.com/xml/">BridgeML</a>.
+</div>
+</body>
+</html>
