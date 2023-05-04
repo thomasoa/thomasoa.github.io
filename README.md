@@ -1,6 +1,6 @@
 # Generated documents
 
-* Contract bridge articles from [contract-bridge-xml](https://github.com/thomasoa/contract-bridge-xml) 
+Contract bridge articles from [contract-bridge-xml](https://github.com/thomasoa/contract-bridge-xml) 
    - [Mobile](mobile/mobile-index.html)
    - Web
       - [Interesting Bridge Hands](articles/hands/index.html)
