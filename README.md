@@ -1,4 +1,4 @@
-# Github-related files related to Thomas's Briddge Fantasia.
+# Github-related files related to Thomas's Bridge Fantasia.
 
 ## Generated articles
 Most of the articles on the site are generated from XML using the code in
