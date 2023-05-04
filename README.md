@@ -21,3 +21,10 @@ also includes the source XML for the articles.
 
 - [The new version](impossible/)
 - [The old version](https://bridge.thomasoandrews.com/impossible/)
+
+## Hand Evaluator
+
+Browser-side implementation of my hand-evaluator.
+
+- [A mobile version](hand-evaluator/mobile.html)
+- [Standard web version](hand-evaluator/)
