@@ -1,3 +1,4 @@
+// File constants
 var zero = BigInt(0);
 var one = BigInt(1);
 function abs(value) {
@@ -31,28 +32,31 @@ export function long_gcd(m, n) {
     while (n != zero) {
         var q = m / n;
         var r = m % n;
-        if (r != zero) {
-            quotients.push(q);
-        }
+        quotients.push(q);
         m = n;
         n = r;
     }
     return { gcd: m, quotients: quotients };
 }
-function buildInverse(quotients, modulus) {
+function buildInverseFromQuotients(quotients) {
     // Standard algorithm for contiued fraction expansion
     // Numerators only needed.
+    //
+    // If m/n is a fraction, then the penultimate continued fraction for m/n, p/q,
+    // satisfies np-mq= +/- 1, depending on the parity of the number of terms. So the
+    // inverse with be +/- p. Here we compute the continued fraction numerators only.
+    //
     var p_0 = zero, p_1 = one;
     quotients.forEach(function (quotient) {
         var p_new = p_1 * quotient + p_0;
         p_0 = p_1;
         p_1 = p_new;
     });
-    if (quotients.length % 2 == 0) {
-        return p_1;
+    if (quotients.length % 2 == 1) {
+        return p_0;
     }
     else {
-        return modulus - p_1;
+        return p_1 - p_0;
     }
 }
 export function modular_inverse(modulus, unit) {
@@ -66,5 +70,5 @@ export function modular_inverse(modulus, unit) {
             + ' and unit ' + unit
             + ' are not relatively prime, gcd=' + result.gcd);
     }
-    return buildInverse(result.quotients, modulus);
+    return buildInverseFromQuotients(result.quotients);
 }
