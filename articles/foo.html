@@ -1,0 +1,41 @@
+<!DOCTYPE html><html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
+<meta name="og:image" content="http://bridge.thomasoandrews.com/graphics/falling_small.jpg">
+<meta name="og:title" content="Everybody Makes">
+<meta name="og:site_name" content="Thomas's Bridge Fantasia">
+<meta name="format-detection" content="telephone=no">
+<meta name="keywords" content="contract bridge, humor, card games">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script><script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script><link rel="stylesheet" type="text/css" href="../mobile.css">
+<link rel="stylesheet" type="text/css" href="../no-table.css">
+<title>Everybody Makes</title>
+</head>
+<body><div id="demo-page" data-role="page" data-url="demo-page">
+        <div data-role="header">
+            <a href="#main-page" class="ui-btn ui-icon-back ui-btn-icon-left">Back To Demos</a>
+            <h1>Demo Main Page</h1>
+        </div>
+        <div role="main" class="ui-content">
+            <p>The following three buttons all take you to the same page. However, when you get there, you will notice that the title of the page is different depending on which button you have clicked.</p>
+            <a href="#secondary-page?section=My Area" class="ui-btn ui-corner-all ui-shadow ui-btn-inline">My Area</a>
+            <a href="#secondary-page?section=My Friends" class="ui-btn ui-corner-all ui-shadow ui-btn-inline">My Friends</a>
+            <a href="#secondary-page?section=My Items" class="ui-btn ui-corner-all ui-shadow ui-btn-inline">My Items</a>
+        </div>
+    </div><div id="secondary-page" data-role="page" data-url="secondary-page">
+        <div data-role="header">
+            <a href="#demo-page" class="ui-btn ui-icon-back ui-btn-icon-left">Back To Main Page</a>
+            <a href="#main-page" class="ui-btn ui-icon-arrow-u ui-btn-icon-left">Back To Demos</a>
+            <h1 id="section"></h1>
+        </div>
+        <div role="main" class="ui-content">
+            <p>This is the second page in the demo. Notice that, as you navigate to this page from the main page, the title of this page changes depending on which button on the main page you clicked.</p>
+            <p>You can also navigate to this same page with different parameters using the links below:</p>
+            <a href="#secondary-page?section=My Area" class="ui-btn ui-corner-all ui-shadow ui-btn-inline">My Area</a>
+            <a href="#secondary-page?section=My Friends" class="ui-btn ui-corner-all ui-shadow ui-btn-inline">My Friends</a>
+            <a href="#secondary-page?section=My Items" class="ui-btn ui-corner-all ui-shadow ui-btn-inline">My Items</a>
+        </div>
+</div>
+</body>

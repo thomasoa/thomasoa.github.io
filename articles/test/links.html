@@ -1,0 +1,110 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="../article.css">
+<link rel="stylesheet" type="text/css" href="../no-table.css">
+<link rel="next" href="html.html">
+<link rel="prefetch" href="complex-auctions.html">
+<link rel="SHORTCUT ICON" href="http://www.thomasoandrews.com/icon/bridge.ico">
+<title>Links</title>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-5586620-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</head>
+<body>
+<table class="prevandnext"><tr>
+<td class="prev"><a href="complex-auctions.html">&lt;&lt; Auctions: Exceptions</a></td>
+<td class="middle">
+<span xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♣</span><span xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♦</span> XML Bridge Tests <span xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="redsuit">♥</span><span xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" xmlns:contract="http://www.thomasoandrews.com/xmlns/bridge#contract" class="blacksuit">♠</span>
+</td>
+<td class="next"><a href="html.html">HTML-like Tags &gt;&gt;</a></td>
+</tr></table>
+<div class="body">
+<h1>Links</h1>
+<div class="paragraph">
+These features are not bridge-related, but I've included
+these examples just for completeness. Note that the links
+don't know whether they are opened in the same frame, the top
+frame of the current window, or a new window.  This decision is
+made in the XSL, based in whether the link is internal, part of
+my site, or external.
+</div>
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>Internal Link</h2>
+Input:
+<pre class="testcode">
+&lt;link rel="internal" href="intro"&gt;This link&lt;/link&gt;
+should take you to the introduction of this book.
+</pre>
+XSL Output:
+<div class="testoutput">
+<a target="display" href="intro.html">This link</a>
+should take you to the introduction of this book.
+</div>
+<div class="testnote">
+The "internal" link basically means that the link is a reference 
+to another page in this same collection.  When generating PDF,
+this is converted to an internal link in the document.  In HTML,
+it loads the page in the current frame (when in a framed document.)
+</div>
+</div>
+
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>On-Site Links</h2>
+Input:
+<pre class="testcode">
+This is a gross hack to indicate pages on my site, such as the
+&lt;link rel="onsite" href="/deal/"&gt;Deal 3.0 page.&lt;/link&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+This is a gross hack to indicate pages on my site, such as the
+<a target="_top" href="http://bridge.thomasoandrews.com/deal/" data-rel="external">Deal 3.0 page.</a>
+</div>
+<div class="testnote">
+This just lets me move my site more easily - a bit of a hack.
+When generating PDF, the site location gets hard-coded.  In HTML,
+causes the document to be loaded in the top frame.
+</div>
+</div>
+
+<div xmlns:card="http://www.thomasoandrews.com/xmlns/bridge#card" class="test">
+<h2>External Link</h2>
+Input:
+<pre class="testcode">
+Many of the formatting decisions I've made are based on the
+recommendations in Richard Pavlicek's
+&lt;link href="http://www.rpbridge.net/7z69.htm"&gt;Bridge
+Writing Style Guide.&lt;/link&gt;
+</pre>
+XSL Output:
+<div class="testoutput">
+Many of the formatting decisions I've made are based on the
+recommendations in Richard Pavlicek's
+<a target="_top" href="http://www.rpbridge.net/7z69.htm" data-rel="external">Bridge
+Writing Style Guide.</a>
+</div>
+<div class="testnote">
+A general link. In HTML, causes the referenced document to be 
+loaded in the top frame.
+</div>
+</div>
+</div>
+<table class="prevandnext"><tr>
+<td class="prev"><a href="complex-auctions.html">&lt;&lt; Auctions: Exceptions</a></td>
+<td class="middle"><div class="signature">Thomas Andrews
+(<a href="mailto:bridge@thomasoandrews.com">bridge@thomasoandrews.com</a>),
+© 2002-2009.
+</div></td>
+<td class="next"><a href="html.html">HTML-like Tags &gt;&gt;</a></td>
+</tr></table>
+<div class="signature">
+Article formatted with <a href="http://bridge.thomasoandrews.com/xml/">BridgeML</a>.
+</div>
+</body>
+</html>
