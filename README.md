@@ -7,14 +7,14 @@ also includes the source XML for the articles.
 
    - [Mobile](mobile/mobile-index.html)
    - Web
-      - [Interesting Bridge Hands](articles/hands/index.html)
-      - [Par-zero deals](articles/parzero/index.html)
-      - [Bad fit deals](articles/badfit/index.html)
-      - [Doubly-asymmetric deals](articles/tenaces/index.html)
-      - [Everybody Makes](articles/everybody/index.html)
-      - [Everybody makes 1S](articles/all1S/index.html)
-      - [Test documents](articles/test/index.html)
+      - [Interesting Bridge Hands](articles/hands/)
+      - [Par-zero deals](articles/parzero/)
+      - [Bad fit deals](articles/badfit/)
+      - [Doubly-asymmetric deals](articles/tenaces/)
+      - [Everybody Makes](articles/everybody/)
+      - [Everybody makes 1S](articles/all1S/)
+      - [Test documents](articles/test/)
 
 ## Impossible Bridge Book - In-Browser edition
 
-[Re-implementation](impossible/] of the Impossible Bridge Book.
+[Re-implementation](impossible/) of the Impossible Bridge Book.
