@@ -17,4 +17,7 @@ also includes the source XML for the articles.
 
 ## Impossible Bridge Book - In-Browser edition
 
-[Re-implementation](impossible/) of the Impossible Bridge Book.
+[Re-implementation](https://github.com/thomasoa/IBBJS) of the Impossible Bridge Book, running inside the browser.
+
+- [The new version](impossible/)
+- [The old version](https://bridge.thomasoandrews.com/impossible/)
