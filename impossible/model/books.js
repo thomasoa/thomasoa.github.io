@@ -74,10 +74,4 @@ var BookSet = /** @class */ (function () {
     });
     return BookSet;
 }());
-/* type EditionPage {
-    name:string,
-    normal:PageNumber,
-    scrambled:PageNumber
-}
- */
 export { BookSet };
