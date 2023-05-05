@@ -84,6 +84,14 @@ var Hand = /** @class */ (function () {
         });
         return new Hand(cards);
     };
+    Hand.forString = function (handString) {
+        var match = handString.match(/^ *S:?([^SHDC]*)H:?([^SHDC]*)D:?([^SHDC]*)C:?([^SHDC]*)$/);
+        if (match) {
+            var holdings = [match[1], match[2], match[3], match[4]].map(function (s) { return Holding.forString(s.trim()); });
+            return Hand.forHoldings(holdings);
+        }
+        throw Error('Invalid hand string: ' + handString);
+    };
     return Hand;
 }());
 function buildHands(toWhom) {
