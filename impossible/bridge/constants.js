@@ -1,3 +1,26 @@
+/**
+ * A set of constant describing things related to bridge deals.
+ *
+ * Types: Seat, Rank, Suit,
+ * Class: Card
+ * Global: Deck, Seats
+ *
+ *     Deck.suits.spades:Suit
+ *        ...
+ *     Deck.suit.clubs:Suit
+ *
+ *     Deck.suits.all:Suit[] - All of the suits
+ *
+ *     Deck.ranks.ace, Deck.ranks.king, ... Deck.ranks.two
+ *     Deck.ranks.all:Rank[]
+ *
+ *     Deck.cards: Card[] - All 52 different card values
+ *
+ *     Deck.card(suit:Suit, rank:Rank):Card - returns the card
+ *
+ *     Deck.cardByName(name:string):Card - Expects suit first, then rank: 'ST' or 'd10'
+ *
+ */
 var North = { name: "north", letter: "N", order: 0 };
 var East = { name: "east", letter: "E", order: 1 };
 var South = { name: "south", letter: "S", order: 2 };
@@ -9,10 +32,10 @@ var Seats = {
     west: West,
     all: new Array(North, East, South, West)
 };
-var Spades = { name: 'spades', letter: 'S', symbol: '\U+2660', order: 0 };
-var Hearts = { name: 'hearts', letter: 'H', symbol: '\U+2665', order: 1 };
-var Diamonds = { name: 'diamonds', letter: 'D', symbol: '\U+2666', order: 2 };
-var Clubs = { name: 'clubs', letter: 'C', symbol: '\U+2663', order: 3 };
+var Spades = { name: 'spades', letter: 'S', symbol: '\U+2660', order: 0, summand: 0 };
+var Hearts = { name: 'hearts', letter: 'H', symbol: '\U+2665', order: 1, summand: 13 * 1 };
+var Diamonds = { name: 'diamonds', letter: 'D', symbol: '\U+2666', order: 2, summand: 13 * 2 };
+var Clubs = { name: 'clubs', letter: 'C', symbol: '\U+2663', order: 3, summand: 13 * 3 };
 var Suits = {
     spades: Spades,
     hearts: Hearts,
@@ -35,7 +58,8 @@ function qr(s, o, letter) {
         brief: s,
         order: o,
         bit: 1 << (12 - o),
-        letter: letter || s
+        letter: letter || s,
+        summand: o
     };
 }
 var Ace = qr('A', 0);
@@ -106,6 +130,7 @@ function createRankParser() {
 }
 var rankParser = createRankParser();
 function rankByText(text) {
+    text = text.toUpperCase();
     var result = rankParser(text);
     if (result.rest != "") {
         throw new Error('Invalid rank: ' + text);
@@ -132,11 +157,12 @@ function ranksByText(text) {
 }
 function make_cards() {
     var cards = new Array(52);
-    for (var cardNum = 0; cardNum < 52; cardNum++) {
-        var suit = Suits.all[Math.floor(cardNum / 13)];
-        var rank = Ranks.all[cardNum % 13];
-        cards[cardNum] = new Card(suit, rank);
-    }
+    Ranks.all.forEach(function (rank) {
+        Suits.all.forEach(function (suit) {
+            var index = suit.summand + rank.summand;
+            cards[index] = new Card(suit, rank);
+        });
+    });
     return cards;
 }
 var Cards = make_cards();
@@ -145,6 +171,7 @@ function cardBySuitRank(suit, rank) {
     return Cards[suit.order * 13 + rank.order];
 }
 function lookupCardByName(name) {
+    name = name.toUpperCase();
     var card = CardsByName.get(name);
     if (card) {
         return card;
