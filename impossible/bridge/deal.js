@@ -1,7 +1,4 @@
-import * as C from "./constants.js";
-//import * as numeric from "../numeric/deal.js"
-//type CardMap = (card:numeric.CardNumber) => C.Card
-//type SeatMap = (seat:numeric.SeatNumber) => C.Seat
+import { Deck, Seats } from "./constants.js";
 var Holding = /** @class */ (function () {
     function Holding(ranks) {
         this.ranks = ranks;
@@ -13,6 +10,7 @@ var Holding = /** @class */ (function () {
         configurable: true
     });
     Holding.prototype.asString = function (divider) {
+        if (divider === void 0) { divider = ''; }
         if (this.length == 0) {
             return '-';
         }
@@ -27,12 +25,15 @@ var Holding = /** @class */ (function () {
     Holding.prototype.has = function (rank) {
         return (this.bits & rank.bit) != 0;
     };
+    Holding.forString = function (text) {
+        return new Holding(Deck.ranksByText(text));
+    };
     return Holding;
 }());
 var Hand = /** @class */ (function () {
     function Hand(cards) {
         this.cards = cards;
-        var suits = C.Suits.all.map(function () { return new Array(); });
+        var suits = Deck.suits.all.map(function () { return new Array(); });
         this.cards.forEach(function (card) {
             suits[card.suit.order].push(card.rank);
         });
@@ -42,22 +43,22 @@ var Hand = /** @class */ (function () {
         return this.holdings[suit.order];
     };
     Object.defineProperty(Hand.prototype, "spades", {
-        get: function () { return this.suit(C.Suits.spades); },
+        get: function () { return this.suit(Deck.suits.spades); },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Hand.prototype, "hearts", {
-        get: function () { return this.suit(C.Suits.hearts); },
+        get: function () { return this.suit(Deck.suits.hearts); },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Hand.prototype, "diamonds", {
-        get: function () { return this.suit(C.Suits.diamonds); },
+        get: function () { return this.suit(Deck.suits.diamonds); },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Hand.prototype, "clubs", {
-        get: function () { return this.suit(C.Suits.clubs); },
+        get: function () { return this.suit(Deck.suits.clubs); },
         enumerable: false,
         configurable: true
     });
@@ -68,14 +69,27 @@ var Hand = /** @class */ (function () {
         return this.holdings.map(function (h) { return h.asString(''); }).join(' ');
     };
     Hand.prototype.eachSuit = function (method) {
-        this.holdings.forEach(function (holding, index) { return method(C.Suits.all[index], holding); });
+        this.holdings.forEach(function (holding, index) { return method(Deck.suits.all[index], holding); });
+    };
+    Hand.forHoldings = function (holdings) {
+        if (holdings.length != 4) {
+            throw new Error('Should be exactly four holdings');
+        }
+        var cards = new Array();
+        holdings.forEach(function (h, suitNum) {
+            var suit = Deck.suits.all[suitNum];
+            h.ranks.forEach(function (rank) {
+                cards.push(Deck.card(suit, rank));
+            });
+        });
+        return new Hand(cards);
     };
     return Hand;
 }());
 function buildHands(toWhom) {
     var cards = Array.from({ length: 4 }, function () { return new Array(0); });
     toWhom.forEach(function (seat, cardNum) {
-        cards[seat.order].push(C.Cards[cardNum]);
+        cards[seat.order].push(Deck.cards[cardNum]);
     });
     return cards.map(function (handCards) { return new Hand(handCards); });
 }
@@ -88,32 +102,32 @@ var Deal = /** @class */ (function () {
         return this.hands[seat.order];
     };
     Object.defineProperty(Deal.prototype, "north", {
-        get: function () { return this.hand(C.Seats.north); },
+        get: function () { return this.hand(Seats.north); },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Deal.prototype, "east", {
-        get: function () { return this.hand(C.Seats.east); },
+        get: function () { return this.hand(Seats.east); },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Deal.prototype, "south", {
-        get: function () { return this.hand(C.Seats.south); },
+        get: function () { return this.hand(Seats.south); },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Deal.prototype, "west", {
-        get: function () { return this.hand(C.Seats.west); },
+        get: function () { return this.hand(Seats.west); },
         enumerable: false,
         configurable: true
     });
     Deal.prototype.eachHand = function (method) {
         //var hands=this.hands;
-        //C.Seats.all.forEach((seat)=> method(seat,hands[seat.order]))
-        this.hands.forEach(function (hand, index) { return method(C.Seats.all[index], hand); });
+        //Seats.all.forEach((seat)=> method(seat,hands[seat.order]))
+        this.hands.forEach(function (hand, index) { return method(Seats.all[index], hand); });
     };
     Deal.prototype.eachCard = function (method) {
-        this.toWhom.forEach(function (seat, index) { return method(C.Cards[index], seat); });
+        this.toWhom.forEach(function (seat, index) { return method(Deck.cards[index], seat); });
     };
     Deal.prototype.equals = function (other) {
         return (this.toWhom.length == other.toWhom.length) &&

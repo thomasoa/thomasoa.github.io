@@ -9,10 +9,10 @@ var Seats = {
     west: West,
     all: new Array(North, East, South, West)
 };
-var Spades = { name: 'spades', letter: 'S', symbol: 'S', order: 0 };
-var Hearts = { name: 'hearts', letter: 'H', symbol: 'H', order: 1 };
-var Diamonds = { name: 'diamonds', letter: 'D', symbol: 'D', order: 2 };
-var Clubs = { name: 'clubs', letter: 'C', symbol: 'C', order: 3 };
+var Spades = { name: 'spades', letter: 'S', symbol: '\U+2660', order: 0 };
+var Hearts = { name: 'hearts', letter: 'H', symbol: '\U+2665', order: 1 };
+var Diamonds = { name: 'diamonds', letter: 'D', symbol: '\U+2666', order: 2 };
+var Clubs = { name: 'clubs', letter: 'C', symbol: '\U+2663', order: 3 };
 var Suits = {
     spades: Spades,
     hearts: Hearts,
@@ -29,12 +29,20 @@ var Card = /** @class */ (function () {
     }
     return Card;
 }());
-function qr(s, o) { return { brief: s, order: o, bit: 1 << (12 - o) }; }
+function qr(s, o, letter) {
+    if (letter === void 0) { letter = undefined; }
+    return {
+        brief: s,
+        order: o,
+        bit: 1 << (12 - o),
+        letter: letter || s
+    };
+}
 var Ace = qr('A', 0);
 var King = qr('K', 1);
 var Queen = qr('Q', 2);
 var Jack = qr('J', 3);
-var Ten = qr('10', 4);
+var Ten = qr('10', 4, 'T');
 var Nine = qr('9', 5);
 var Eight = qr('8', 6);
 var Seven = qr('7', 7);
@@ -59,6 +67,69 @@ var Ranks = {
     two: Two,
     all: [Ace, King, Queen, Jack, Ten, Nine, Eight, Seven, Six, Five, Four, Three, Two]
 };
+var RankParser = /** @class */ (function () {
+    function RankParser(text, rank) {
+        this.letter = text.slice(0, 1);
+        this.full = text;
+        this.rank = rank;
+    }
+    Object.defineProperty(RankParser.prototype, "length", {
+        get: function () { return this.full.length; },
+        enumerable: false,
+        configurable: true
+    });
+    RankParser.prototype.apply = function (text) {
+        if (text.slice(0, this.length) == this.full) {
+            return { rank: this.rank, rest: text.slice(this.length) };
+        }
+    };
+    return RankParser;
+}());
+function createRankParser() {
+    var map = new Map();
+    var add = function (parser) {
+        map.set(parser.letter, parser);
+    };
+    Ranks.all.forEach(function (rank) {
+        add(new RankParser(rank.letter, rank));
+        if (rank.brief != rank.letter) {
+            add(new RankParser(rank.brief, rank));
+        }
+    });
+    return function (text) {
+        var parser = map.get(text.slice(0, 1));
+        if (parser) {
+            return parser.apply(text);
+        }
+        throw new Error('Invalid rank ' + text);
+    };
+}
+var rankParser = createRankParser();
+function rankByText(text) {
+    var result = rankParser(text);
+    if (result.rest != "") {
+        throw new Error('Invalid rank: ' + text);
+    }
+    return result.rank;
+}
+function ranksByText(text) {
+    var ranks = new Array();
+    if (text == '-') {
+        return ranks;
+    }
+    var lastOrder = -1;
+    var rest = text;
+    while (rest != '') {
+        var result = rankParser(rest);
+        if (result.rank.order <= lastOrder) {
+            throw new Error('Invalid rank order in ' + text);
+        }
+        ranks.push(result.rank);
+        rest = result.rest.trimStart();
+        lastOrder = result.rank.order;
+    }
+    return ranks;
+}
 function make_cards() {
     var cards = new Array(52);
     for (var cardNum = 0; cardNum < 52; cardNum++) {
@@ -70,4 +141,26 @@ function make_cards() {
 }
 var Cards = make_cards();
 var CardsByName = new Map(Cards.map(function (card) { return [card.short, card]; }));
-export { Suits, Ranks, Cards, CardsByName, Seats, Card };
+function cardBySuitRank(suit, rank) {
+    return Cards[suit.order * 13 + rank.order];
+}
+function lookupCardByName(name) {
+    var card = CardsByName.get(name);
+    if (card) {
+        return card;
+    }
+    throw Error('Invalid card name ' + name);
+}
+var Deck = {
+    ranks: Ranks,
+    suits: Suits,
+    cards: Cards,
+    cardByName: lookupCardByName,
+    cardsByName: function (names) {
+        return names.map(lookupCardByName);
+    },
+    rankByText: rankByText,
+    ranksByText: ranksByText,
+    card: cardBySuitRank
+};
+export { CardsByName, Seats, Card, Deck };

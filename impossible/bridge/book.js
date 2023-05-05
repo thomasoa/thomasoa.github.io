@@ -1,4 +1,4 @@
-import * as C from "./constants.js";
+import { Deck, Seats } from "./constants.js";
 import { NumericDeal, bridgeSignature } from "../numeric/index.js";
 import { Deal } from "./deal.js";
 var SimpleBijection = /** @class */ (function () {
@@ -21,8 +21,8 @@ var SimpleBijection = /** @class */ (function () {
     };
     return SimpleBijection;
 }());
-var defaultBijectionSeat = new SimpleBijection(C.Seats.all);
-var defaultBijectionCard = new SimpleBijection(C.Cards);
+var defaultBijectionSeat = new SimpleBijection(Seats.all);
+var defaultBijectionCard = new SimpleBijection(Deck.cards);
 function validate_signature(signature) {
     if (!bridgeSignature.equals(signature)) {
         throw new TypeError('Invalid signature');
@@ -57,7 +57,7 @@ var BridgeBook = /** @class */ (function () {
         var numDeal = this.strategy.computePageContent(pageNo - BigInt(1));
         var seatMap = this.seatBijection;
         var cardMap = this.cardBijection;
-        var toWhom = new Array(C.Cards.length);
+        var toWhom = new Array(Deck.cards.length);
         numDeal.toWhom.forEach(function (seatNum, cardNum) {
             var seat = seatMap.mapTo(seatNum);
             var card = cardMap.mapTo(cardNum);
