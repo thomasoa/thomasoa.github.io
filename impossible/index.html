@@ -95,7 +95,6 @@
     $(document).ready(() => initialize())
 
     function showCommit(revision) {
-        console.log(revision)
         var item = $('#commitURL')
         item.find('a').attr("href",revision['revision'])
         item.show()
