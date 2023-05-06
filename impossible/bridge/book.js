@@ -36,7 +36,7 @@ var BridgeBook = /** @class */ (function () {
         var numDeal = this.strategy.computePageContent(pageNo - BigInt(1));
         var seatMap = this.seatBijection;
         var cardMap = this.cardBijection;
-        var toWhom = new Array(Deck.cards.length);
+        var toWhom = new Array(Deck.cards.all.length);
         numDeal.toWhom.forEach(function (seatNum, cardNum) {
             var seat = seatMap.mapTo(seatNum);
             var card = cardMap.mapTo(cardNum);

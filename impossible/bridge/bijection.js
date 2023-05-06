@@ -20,5 +20,5 @@ var SimpleBijection = /** @class */ (function () {
     return SimpleBijection;
 }());
 var defaultBijectionSeat = new SimpleBijection(Seats.all);
-var defaultBijectionCard = new SimpleBijection(Deck.cards);
+var defaultBijectionCard = new SimpleBijection(Deck.cards.all);
 export { SimpleBijection, defaultBijectionCard, defaultBijectionSeat };

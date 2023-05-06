@@ -1,8 +1,8 @@
 import { Deck, Seats } from "./constants.js";
 var Holding = /** @class */ (function () {
     function Holding(ranks) {
-        this.ranks = ranks;
         this.bits = ranks.reduce(function (binary, rank) { return rank.bit | binary; }, 0);
+        this.ranks = Deck.ranks.fromBits(this.bits);
     }
     Object.defineProperty(Holding.prototype, "length", {
         get: function () { return this.ranks.length; },
@@ -26,14 +26,17 @@ var Holding = /** @class */ (function () {
         return (this.bits & rank.bit) != 0;
     };
     Holding.forString = function (text) {
-        return new Holding(Deck.ranksByText(text.toUpperCase()));
+        return new Holding(Deck.ranks.parse(text.toUpperCase()));
+    };
+    Holding.fromBits = function (bits) {
+        return new Holding(Deck.ranks.fromBits(bits));
     };
     return Holding;
 }());
 var Hand = /** @class */ (function () {
     function Hand(cards) {
         this.cards = cards;
-        var suits = Deck.suits.all.map(function () { return new Array(); });
+        var suits = Deck.suits.map(function () { return new Array(); });
         this.cards.forEach(function (card) {
             suits[card.suit.order].push(card.rank);
         });
@@ -98,7 +101,7 @@ var Hand = /** @class */ (function () {
 function buildHands(toWhom) {
     var cards = Array.from({ length: 4 }, function () { return new Array(0); });
     toWhom.forEach(function (seat, cardNum) {
-        cards[seat.order].push(Deck.cards[cardNum]);
+        cards[seat.order].push(Deck.cards.all[cardNum]);
     });
     return cards.map(function (handCards) { return new Hand(handCards); });
 }
@@ -131,12 +134,10 @@ var Deal = /** @class */ (function () {
         configurable: true
     });
     Deal.prototype.eachHand = function (method) {
-        //var hands=this.hands;
-        //Seats.all.forEach((seat)=> method(seat,hands[seat.order]))
         this.hands.forEach(function (hand, index) { return method(Seats.all[index], hand); });
     };
     Deal.prototype.eachCard = function (method) {
-        this.toWhom.forEach(function (seat, index) { return method(Deck.cards[index], seat); });
+        this.toWhom.forEach(function (seat, index) { return method(Deck.cards.all[index], seat); });
     };
     Deal.prototype.equals = function (other) {
         return (this.toWhom.length == other.toWhom.length) &&

@@ -5,92 +5,113 @@
  * Class: Card
  * Global: Deck, Seats
  *
- *     Deck.suits.spades:Suit
- *        ...
- *     Deck.suit.clubs:Suit
+ *     Seats.all : Seat[] - Array of all seat objects
+ *     Seats.each         - alias for Seats.all.forEach
+ *     Seats.map          - alias for Seats.all.map
  *
- *     Deck.suits.all:Suit[] - All of the suits
+ *     Deck.suits.all : Suit[] - Array of all suits
+ *     Deck.suits.each, Deck.suits.map
+ *                             - aliases
  *
- *     Deck.ranks.ace, Deck.ranks.king, ... Deck.ranks.two
- *     Deck.ranks.all:Rank[]
+ *     Deck.ranks.all: Rank[] - Array of all ranks
+ *     Deck.ranks.each, Deck.ranks.map
+ *                            - aliases
  *
- *     Deck.cards: Card[] - All 52 different card values
+ *     Deck.cards.all: Card[] - All 52 different card values
+ *     Deck.cards.each, Deck.cards.map
  *
  *     Deck.card(suit:Suit, rank:Rank):Card - returns the card
  *
  *     Deck.cardByName(name:string):Card - Expects suit first, then rank: 'ST' or 'd10'
  *
+ *     Seats.nprth, Seats.east, Seats.south, Seats.west
+ *     Deck.Ranks.ace, ..., Deck.Ranks.two
+ *     Deck.Suits.spades, ..., Deck.Suits.clubs
+ *
  */
+function f(obj) {
+    Object.freeze(obj);
+    return obj;
+}
 var North = { name: "north", letter: "N", order: 0 };
 var East = { name: "east", letter: "E", order: 1 };
 var South = { name: "south", letter: "S", order: 2 };
 var West = { name: "west", letter: "W", order: 3 };
+var AllSeats = [North, East, South, West];
+AllSeats.forEach(Object.freeze);
+Object.freeze(AllSeats);
 var Seats = {
     north: North,
     east: East,
     south: South,
     west: West,
-    all: new Array(North, East, South, West)
+    all: AllSeats,
+    each: AllSeats.forEach.bind(AllSeats),
+    map: AllSeats.map.bind(AllSeats)
 };
-var Spades = { name: 'spades', letter: 'S', symbol: '\U+2660', order: 0, summand: 0 };
-var Hearts = { name: 'hearts', letter: 'H', symbol: '\U+2665', order: 1, summand: 13 * 1 };
-var Diamonds = { name: 'diamonds', letter: 'D', symbol: '\U+2666', order: 2, summand: 13 * 2 };
-var Clubs = { name: 'clubs', letter: 'C', symbol: '\U+2663', order: 3, summand: 13 * 3 };
+Object.freeze(Seats);
+var Rank = /** @class */ (function () {
+    function Rank(brief, order, letter) {
+        if (letter === void 0) { letter = undefined; }
+        this.brief = brief;
+        this.order = order;
+        this.bit = 1 << (12 - order);
+        this.letter = letter || brief;
+        this.summand = order;
+        Object.freeze(this);
+    }
+    return Rank;
+}());
+var Spades = f({ name: 'spades', letter: 'S', symbol: '\U+2660', order: 0, summand: 0 });
+var Hearts = f({ name: 'hearts', letter: 'H', symbol: '\U+2665', order: 1, summand: 13 * 1 });
+var Diamonds = f({ name: 'diamonds', letter: 'D', symbol: '\U+2666', order: 2, summand: 13 * 2 });
+var Clubs = f({ name: 'clubs', letter: 'C', symbol: '\U+2663', order: 3, summand: 13 * 3 });
+var AllSuits = [Spades, Hearts, Diamonds, Clubs];
+Object.freeze(AllSuits);
 var Suits = {
     spades: Spades,
     hearts: Hearts,
     diamonds: Diamonds,
     clubs: Clubs,
-    all: new Array(Spades, Hearts, Diamonds, Clubs)
+    all: AllSuits,
+    each: AllSuits.forEach.bind(AllSuits),
+    map: AllSuits.map.bind(AllSuits)
 };
+Suits.each(Object.freeze);
+Object.freeze(Suits);
 var Card = /** @class */ (function () {
     function Card(suit, rank) {
         this.suit = suit;
         this.rank = rank;
         this.short = suit.letter + rank.brief;
         this.order = rank.order + 13 * suit.order;
+        Object.freeze(this);
     }
     return Card;
 }());
-function qr(s, o, letter) {
-    if (letter === void 0) { letter = undefined; }
-    return {
-        brief: s,
-        order: o,
-        bit: 1 << (12 - o),
-        letter: letter || s,
-        summand: o
-    };
+var Ace = new Rank('A', 0);
+var King = new Rank('K', 1);
+var Queen = new Rank('Q', 2);
+var Jack = new Rank('J', 3);
+var Ten = new Rank('10', 4, 'T');
+var Nine = new Rank('9', 5);
+var Eight = new Rank('8', 6);
+var Seven = new Rank('7', 7);
+var Six = new Rank('6', 8);
+var Five = new Rank('5', 9);
+var Four = new Rank('4', 10);
+var Three = new Rank('3', 11);
+var Two = new Rank('2', 12);
+var AllRanks = f([Ace, King, Queen, Jack, Ten, Nine, Eight, Seven, Six, Five, Four, Three, Two]);
+function ranksFromBits(bits) {
+    var ranks = new Array();
+    AllRanks.forEach(function (rank) {
+        if (rank.bit & bits) {
+            ranks.push(rank);
+        }
+    });
+    return ranks;
 }
-var Ace = qr('A', 0);
-var King = qr('K', 1);
-var Queen = qr('Q', 2);
-var Jack = qr('J', 3);
-var Ten = qr('10', 4, 'T');
-var Nine = qr('9', 5);
-var Eight = qr('8', 6);
-var Seven = qr('7', 7);
-var Six = qr('6', 8);
-var Five = qr('5', 9);
-var Four = qr('4', 10);
-var Three = qr('3', 11);
-var Two = qr('2', 12);
-var Ranks = {
-    ace: Ace,
-    king: King,
-    queen: Queen,
-    jack: Jack,
-    ten: Ten,
-    nine: Nine,
-    eight: Eight,
-    seven: Seven,
-    six: Six,
-    five: Five,
-    four: Four,
-    three: Three,
-    two: Two,
-    all: [Ace, King, Queen, Jack, Ten, Nine, Eight, Seven, Six, Five, Four, Three, Two]
-};
 var RankParser = /** @class */ (function () {
     function RankParser(text, rank) {
         this.letter = text.slice(0, 1);
@@ -114,7 +135,7 @@ function createRankParser() {
     var add = function (parser) {
         map.set(parser.letter, parser);
     };
-    Ranks.all.forEach(function (rank) {
+    AllRanks.forEach(function (rank) {
         add(new RankParser(rank.letter, rank));
         if (rank.brief != rank.letter) {
             add(new RankParser(rank.brief, rank));
@@ -155,21 +176,43 @@ function ranksByText(text) {
     }
     return ranks;
 }
+var Ranks = f({
+    ace: Ace,
+    king: King,
+    queen: Queen,
+    jack: Jack,
+    ten: Ten,
+    nine: Nine,
+    eight: Eight,
+    seven: Seven,
+    six: Six,
+    five: Five,
+    four: Four,
+    three: Three,
+    two: Two,
+    all: AllRanks,
+    each: AllRanks.forEach.bind(AllRanks),
+    map: AllRanks.map.bind(AllRanks),
+    fromBits: ranksFromBits,
+    byName: rankByText,
+    parse: ranksByText
+});
 function make_cards() {
     var cards = new Array(52);
-    Ranks.all.forEach(function (rank) {
-        Suits.all.forEach(function (suit) {
+    Ranks.each(function (rank) {
+        Suits.each(function (suit) {
             var index = suit.summand + rank.summand;
-            cards[index] = new Card(suit, rank);
+            cards[index] = f(new Card(suit, rank));
         });
     });
-    return cards;
+    return f(cards);
 }
-var Cards = make_cards();
-var CardsByName = new Map(Cards.map(function (card) { return [card.short, card]; }));
+var AllCards = make_cards();
+var CardsByName = new Map(AllCards.map(function (card) { return [card.short, card]; }));
 function cardBySuitRank(suit, rank) {
-    return Cards[suit.order * 13 + rank.order];
+    return AllCards[suit.summand + rank.summand];
 }
+Rank.prototype.of = function (suit) { return cardBySuitRank(suit, this); };
 function lookupCardByName(name) {
     name = name.toUpperCase();
     var card = CardsByName.get(name);
@@ -178,16 +221,26 @@ function lookupCardByName(name) {
     }
     throw Error('Invalid card name ' + name);
 }
+function lookupCardsByNames() {
+    var names = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        names[_i] = arguments[_i];
+    }
+    return names.map(lookupCardByName);
+}
+var Cards = f({
+    all: AllCards,
+    each: AllCards.forEach.bind(AllCards),
+    map: AllCards.map.bind(AllCards),
+    byName: lookupCardByName,
+    byNames: lookupCardsByNames
+});
 var Deck = {
     ranks: Ranks,
     suits: Suits,
     cards: Cards,
-    cardByName: lookupCardByName,
-    cardsByName: function (names) {
-        return names.map(lookupCardByName);
-    },
-    rankByText: rankByText,
-    ranksByText: ranksByText,
-    card: cardBySuitRank
+    card: cardBySuitRank,
+    c: Cards.byName
 };
-export { CardsByName, Seats, Card, Deck };
+Object.freeze(Deck);
+export { Deck, Seats, Rank, Card };
