@@ -1,5 +1,5 @@
-import { defaultBijectionCard } from './bijection.js';
-import { Hand } from "./deal.js";
+import { defaultBijectionCard } from './bijection';
+import { Hand } from "./deal";
 function assertBridgeHandStrategy(strategy) {
     var sig = strategy.signature;
     if (sig.handLength != 13 || sig.cards != 52) {
@@ -25,7 +25,6 @@ var HandBook = /** @class */ (function () {
     });
     HandBook.prototype.getHand = function (pageNo) {
         var pageIndex = pageNo - BigInt(1);
-        console.log(this.strategy);
         this.strategy.assertValidPage(pageIndex, BigInt(1));
         var bijection = this.cardBijection;
         var numericCards = this.strategy.computePageContent(pageNo - BigInt(1));

@@ -127,6 +127,7 @@ var RankParser = /** @class */ (function () {
         if (text.slice(0, this.length) == this.full) {
             return { rank: this.rank, rest: text.slice(this.length) };
         }
+        throw new Error('Invalid card rank ' + text);
     };
     return RankParser;
 }());

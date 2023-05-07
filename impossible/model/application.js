@@ -1,4 +1,4 @@
-import { BookSet } from "./books.js";
+import { BookSet } from "./books";
 var Application = /** @class */ (function () {
     function Application() {
         this.currentIndex = -1;

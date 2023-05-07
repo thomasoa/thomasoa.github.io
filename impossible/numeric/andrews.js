@@ -1,7 +1,7 @@
 //  An entirely numeric version of the book
-import { bridgeSignature, bridgeHandSignature, NumericDeal } from "./deal.js";
-import { choose } from "./choose.js";
-import * as squashed from './squashed.js';
+import { bridgeSignature, bridgeHandSignature, NumericDeal } from "./deal";
+import { choose } from "./choose";
+import * as squashed from './squashed';
 function computeFactors(cardsPer) {
     var totalCards = 0;
     var totalProduct = BigInt(1);
@@ -134,7 +134,6 @@ var AndrewsHandStrategy = /** @class */ (function () {
     AndrewsHandStrategy.prototype.computePageContent = function (pageNo) {
         this.assertValidPage(pageNo);
         var result = squashed.decode(pageNo, this.signature.handLength);
-        console.log(this.signature.handLength, result);
         return result;
     };
     AndrewsHandStrategy.prototype.computePageNumber = function (cards) {

@@ -1,5 +1,5 @@
 import { DealSignature, NumericDeal, // classes
-bridgeSignature, bridgeHandSignature } from './deal.js';
+bridgeSignature, bridgeHandSignature } from './deal';
 var Range = /** @class */ (function () {
     function Range(start, width) {
         this.start = start;

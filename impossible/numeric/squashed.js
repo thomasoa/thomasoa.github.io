@@ -1,4 +1,4 @@
-import { choose } from "./choose.js";
+import { choose } from "./choose";
 /**
 * The squashed order is a total order on all sets of n
 * natural number. For example, when n=3, the order start:

@@ -1,5 +1,5 @@
-import { BridgeBook, SimpleBijection, Seats } from "../bridge/index.js";
-import { AndrewsDealStrategy, PavlicekDealStrategy, MultiplierScrambler, bridgeSignature, ScrambleStrategy } from "../numeric/index.js";
+import { BridgeBook, SimpleBijection, Seats } from "../bridge/index";
+import { AndrewsDealStrategy, PavlicekDealStrategy, MultiplierScrambler, bridgeSignature, ScrambleStrategy } from "../numeric/index";
 function common_scrambler() {
     var multiplier = BigInt("13109994191499930367061460371");
     var translation = BigInt("34563463456363563565356345634");
