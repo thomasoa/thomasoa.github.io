@@ -6,7 +6,8 @@ var Application = /** @class */ (function () {
         this.deals = new Array();
         this.callbacks = {
             updateCurrentDeal: new Array(),
-            updateDealCount: new Array()
+            updateDealCount: new Array(),
+            applicationReset: new Array()
         };
     }
     Application.prototype.deal = function (index) {
@@ -98,14 +99,16 @@ var Application = /** @class */ (function () {
     };
     Application.prototype.reset = function () {
         this.deals = new Array(0);
-        this.updateCount();
-        this.updateCurrent(-1);
+        this.callbacks.applicationReset.forEach((function (callback) { callback(); }));
     };
     Application.prototype.listenCurrentDeal = function (callback) {
         this.callbacks.updateCurrentDeal.push(callback);
     };
     Application.prototype.listenDealCount = function (callback) {
         this.callbacks.updateDealCount.push(callback);
+    };
+    Application.prototype.listenReset = function (callback) {
+        this.callbacks.applicationReset.push(callback);
     };
     Object.defineProperty(Application.prototype, "currentDeal", {
         get: function () {
@@ -115,7 +118,7 @@ var Application = /** @class */ (function () {
                 deal.count = this.length;
                 return deal;
             }
-            return undefined;
+            throw new Error('No current deak');
         },
         enumerable: false,
         configurable: true
