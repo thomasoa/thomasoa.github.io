@@ -65,22 +65,22 @@ var Remaining = /** @class */ (function () {
     };
     return Remaining;
 }());
-var PavlicekStrategy = /** @class */ (function () {
-    function PavlicekStrategy(signature) {
+var PavlicekDealStrategy = /** @class */ (function () {
+    function PavlicekDealStrategy(signature) {
         if (signature === void 0) { signature = bridgeSignature; }
         this.signature = signature;
     }
-    Object.defineProperty(PavlicekStrategy.prototype, "pages", {
+    Object.defineProperty(PavlicekDealStrategy.prototype, "pages", {
         get: function () { return this.signature.pages; },
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(PavlicekStrategy.prototype, "lastPage", {
+    Object.defineProperty(PavlicekDealStrategy.prototype, "lastPage", {
         get: function () { return this.signature.lastPage; },
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(PavlicekStrategy.prototype, "baseRange", {
+    Object.defineProperty(PavlicekDealStrategy.prototype, "baseRange", {
         /**
         * The range for all pages for this strategy
         */
@@ -90,7 +90,7 @@ var PavlicekStrategy = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    PavlicekStrategy.prototype.computePageContent = function (pageNo) {
+    PavlicekDealStrategy.prototype.computePageContent = function (pageNo) {
         this.signature.assertValidPageNo(pageNo);
         var sig = this.signature;
         var remaining = new Remaining(sig.perSeat, sig.cards);
@@ -100,8 +100,8 @@ var PavlicekStrategy = /** @class */ (function () {
         }
         return new NumericDeal(sig, remaining.toWhom);
     };
-    PavlicekStrategy.prototype.computePageNumber = function (deal) {
-        this.signature.assertEqual(deal.signature, 'Mismatched signatures for Deal and PavlicekStrategy');
+    PavlicekDealStrategy.prototype.computePageNumber = function (deal) {
+        this.signature.assertEqual(deal.signature, 'Mismatched signatures for Deal and PavlicekDealStrategy');
         var range = this.baseRange;
         var remaining = new Remaining(deal.signature.perSeat, deal.signature.cards);
         deal.toWhom.forEach(function (seat, card) {
@@ -113,14 +113,14 @@ var PavlicekStrategy = /** @class */ (function () {
         }
         return range.start;
     };
-    return PavlicekStrategy;
+    return PavlicekDealStrategy;
 }());
 var PavlicekHandStrategy = /** @class */ (function () {
     function PavlicekHandStrategy(sig) {
         if (sig === void 0) { sig = bridgeHandSignature; }
         this.signature = sig;
         var dSig = new DealSignature([sig.handLength, sig.cards - sig.handLength]);
-        this.pStrategy = new PavlicekStrategy(dSig);
+        this.pStrategy = new PavlicekDealStrategy(dSig);
     }
     Object.defineProperty(PavlicekHandStrategy.prototype, "pages", {
         get: function () {
@@ -158,4 +158,5 @@ var PavlicekHandStrategy = /** @class */ (function () {
     };
     return PavlicekHandStrategy;
 }());
-export { PavlicekStrategy, PavlicekHandStrategy };
+export { PavlicekDealStrategy, PavlicekHandStrategy, Range, Remaining // For testing only
+ };

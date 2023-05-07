@@ -112,7 +112,6 @@ var AndrewsDealStrategy = /** @class */ (function () {
     };
     return AndrewsDealStrategy;
 }());
-var AndrewsStrategy = AndrewsDealStrategy;
 var AndrewsHandStrategy = /** @class */ (function () {
     function AndrewsHandStrategy(sig) {
         if (sig === void 0) { sig = bridgeHandSignature; }
@@ -144,4 +143,4 @@ var AndrewsHandStrategy = /** @class */ (function () {
     };
     return AndrewsHandStrategy;
 }());
-export { AndrewsDealStrategy, AndrewsStrategy, AndrewsHandStrategy, SequenceBuilder /* only for unit tests */ };
+export { AndrewsDealStrategy, AndrewsHandStrategy, SequenceBuilder /* only for unit tests */ };

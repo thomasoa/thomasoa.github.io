@@ -1,5 +1,5 @@
 import { BridgeBook, SimpleBijection, Seats } from "../bridge/index.js";
-import { AndrewsStrategy, PavlicekStrategy, MultiplierScrambler, bridgeSignature, ScrambleStrategy } from "../numeric/index.js";
+import { AndrewsDealStrategy, PavlicekDealStrategy, MultiplierScrambler, bridgeSignature, ScrambleStrategy } from "../numeric/index.js";
 function common_scrambler() {
     var multiplier = BigInt("13109994191499930367061460371");
     var translation = BigInt("34563463456363563565356345634");
@@ -11,12 +11,12 @@ function edition(book, scrambler) {
     return { normal: book, scrambled: scrambled };
 }
 function pavlicekBook() {
-    var strategy = new PavlicekStrategy();
+    var strategy = new PavlicekDealStrategy();
     return new BridgeBook(strategy);
 }
 function andrewsBook() {
     // We use a seat map to match the original book
-    var strategy = new AndrewsStrategy();
+    var strategy = new AndrewsDealStrategy();
     var seatBijection = new SimpleBijection(Seats.all, function (seatNumber) { return 3 - seatNumber; });
     return new BridgeBook(strategy, seatBijection);
 }
