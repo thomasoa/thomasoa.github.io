@@ -1,5 +1,5 @@
 // Common numeric deal logic and types
-import { multinomial } from "./choose.js";
+import { multinomial, choose } from "./choose.js";
 var DealSignature = /** @class */ (function () {
     function DealSignature(cardsPerSeat) {
         this.perSeat = Array.from(cardsPerSeat);
@@ -65,6 +65,45 @@ var DealSignature = /** @class */ (function () {
     };
     return DealSignature;
 }());
+var HandSignature = /** @class */ (function () {
+    function HandSignature(handLength, deckLength) {
+        this.handLength = handLength;
+        this.cards = deckLength;
+        this.pages = choose(deckLength, handLength);
+    }
+    Object.defineProperty(HandSignature.prototype, "lastPage", {
+        get: function () { return this.pages - BigInt(1); },
+        enumerable: false,
+        configurable: true
+    });
+    HandSignature.prototype.assertValidCard = function (card) {
+        if (card < 0 || card >= this.cards) {
+            throw new TypeError('Invalid card number ' + card + ', should be between 0 and ' + (this.cards - 1));
+        }
+    };
+    HandSignature.prototype.assertValidPage = function (pageNo, adjust) {
+        if (adjust === void 0) { adjust = BigInt(0); }
+        if (pageNo < BigInt(0) || pageNo >= this.pages) {
+            throw new Error('Page out of bounds: ' + (pageNo + adjust));
+        }
+    };
+    HandSignature.prototype.assertValidHand = function (numbers) {
+        if (numbers.length != this.handLength) {
+            throw new Error('Expected ' + this.handLength + ' cards, got ' + numbers.length);
+        }
+        var last = -1;
+        for (var i = 0; i < numbers.length; i++) {
+            var card = numbers[i];
+            if (card <= last) {
+                throw new TypeError('Expected sorted list of card numbers');
+            }
+            this.assertValidCard(card);
+            last = card;
+        }
+        // TODO check cards are distinct
+    };
+    return HandSignature;
+}());
 /**
  * A standard bridge signature - four seats, each seat getting 13 cards
  */
@@ -107,5 +146,6 @@ var NumericDeal = /** @class */ (function () {
     };
     return NumericDeal;
 }());
-export { DealSignature, NumericDeal, //classes
-bridgeSignature };
+var bridgeHandSignature = new HandSignature(13, 52);
+export { DealSignature, HandSignature, NumericDeal, // classes
+bridgeSignature, bridgeHandSignature };

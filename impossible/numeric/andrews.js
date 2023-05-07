@@ -1,7 +1,7 @@
 //  An entirely numeric version of the book
-import { bridgeSignature, NumericDeal } from "./deal.js";
+import { bridgeSignature, bridgeHandSignature, NumericDeal } from "./deal.js";
 import { choose } from "./choose.js";
-import { decode, encode } from './squashed.js';
+import * as squashed from './squashed.js';
 function computeFactors(cardsPer) {
     var totalCards = 0;
     var totalProduct = BigInt(1);
@@ -52,23 +52,23 @@ var SequenceBuilder = /** @class */ (function () {
     };
     return SequenceBuilder;
 }());
-var AndrewsStrategy = /** @class */ (function () {
-    function AndrewsStrategy(signature) {
+var AndrewsDealStrategy = /** @class */ (function () {
+    function AndrewsDealStrategy(signature) {
         if (signature === void 0) { signature = bridgeSignature; }
         this.signature = signature;
         this.factors = computeFactors(this.signature.perSeat);
     }
-    Object.defineProperty(AndrewsStrategy.prototype, "pages", {
+    Object.defineProperty(AndrewsDealStrategy.prototype, "pages", {
         get: function () { return this.signature.pages; },
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(AndrewsStrategy.prototype, "lastPage", {
+    Object.defineProperty(AndrewsDealStrategy.prototype, "lastPage", {
         get: function () { return this.signature.lastPage; },
         enumerable: false,
         configurable: true
     });
-    AndrewsStrategy.prototype.makeSequenceBuilders = function () {
+    AndrewsDealStrategy.prototype.makeSequenceBuilders = function () {
         var sig = this.signature;
         var builders = Array(sig.seats - 1);
         for (var i = 1; i < sig.seats; i++) {
@@ -76,7 +76,7 @@ var AndrewsStrategy = /** @class */ (function () {
         }
         return builders;
     };
-    AndrewsStrategy.prototype.computePageNumber = function (deal) {
+    AndrewsDealStrategy.prototype.computePageNumber = function (deal) {
         this.signature.assertEqual(deal.signature, 'Mismatched signatures for Deal and Strategy');
         var builders = this.makeSequenceBuilders();
         deal.toWhom.forEach(function (whom, card) {
@@ -85,12 +85,12 @@ var AndrewsStrategy = /** @class */ (function () {
         var sum = BigInt(0);
         this.factors.forEach(function (factor) {
             var builder = builders[factor.seat - 1];
-            var seqNo = encode(builder.sequence);
+            var seqNo = squashed.encode(builder.sequence);
             sum += seqNo * factor.quotient;
         });
         return sum;
     };
-    AndrewsStrategy.prototype.computePageContent = function (pageNo) {
+    AndrewsDealStrategy.prototype.computePageContent = function (pageNo) {
         // Determine what deal is on the given page number
         var sig = this.signature;
         this.signature.assertValidPageNo(pageNo);
@@ -105,11 +105,43 @@ var AndrewsStrategy = /** @class */ (function () {
         this.factors.forEach(function (factor) {
             var seatIndex = pageNo / factor.quotient;
             pageNo = pageNo % factor.quotient;
-            var sequence = decode(seatIndex, factor.cards);
+            var sequence = squashed.decode(seatIndex, factor.cards);
             indices = updateSequence(factor.seat, sequence, toWhom, indices);
         });
         return new NumericDeal(this.signature, toWhom);
     };
-    return AndrewsStrategy;
+    return AndrewsDealStrategy;
 }());
-export { AndrewsStrategy, SequenceBuilder };
+var AndrewsStrategy = AndrewsDealStrategy;
+var AndrewsHandStrategy = /** @class */ (function () {
+    function AndrewsHandStrategy(sig) {
+        if (sig === void 0) { sig = bridgeHandSignature; }
+        this.signature = sig;
+    }
+    Object.defineProperty(AndrewsHandStrategy.prototype, "pages", {
+        get: function () { return this.signature.pages; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(AndrewsHandStrategy.prototype, "lastPage", {
+        get: function () { return this.signature.lastPage; },
+        enumerable: false,
+        configurable: true
+    });
+    AndrewsHandStrategy.prototype.assertValidPage = function (pageNo, adjust) {
+        if (adjust === void 0) { adjust = BigInt(0); }
+        this.signature.assertValidPage(pageNo, adjust);
+    };
+    AndrewsHandStrategy.prototype.computePageContent = function (pageNo) {
+        this.assertValidPage(pageNo);
+        var result = squashed.decode(pageNo, this.signature.handLength);
+        console.log(this.signature.handLength, result);
+        return result;
+    };
+    AndrewsHandStrategy.prototype.computePageNumber = function (cards) {
+        this.signature.assertValidHand(cards);
+        return squashed.encode(cards);
+    };
+    return AndrewsHandStrategy;
+}());
+export { AndrewsDealStrategy, AndrewsStrategy, AndrewsHandStrategy, SequenceBuilder /* only for unit tests */ };

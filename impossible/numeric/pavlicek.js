@@ -1,5 +1,5 @@
-import { NumericDeal, // classes
-bridgeSignature } from './deal.js';
+import { DealSignature, NumericDeal, // classes
+bridgeSignature, bridgeHandSignature } from './deal.js';
 var Range = /** @class */ (function () {
     function Range(start, width) {
         this.start = start;
@@ -115,4 +115,47 @@ var PavlicekStrategy = /** @class */ (function () {
     };
     return PavlicekStrategy;
 }());
-export { PavlicekStrategy };
+var PavlicekHandStrategy = /** @class */ (function () {
+    function PavlicekHandStrategy(sig) {
+        if (sig === void 0) { sig = bridgeHandSignature; }
+        this.signature = sig;
+        var dSig = new DealSignature([sig.handLength, sig.cards - sig.handLength]);
+        this.pStrategy = new PavlicekStrategy(dSig);
+    }
+    Object.defineProperty(PavlicekHandStrategy.prototype, "pages", {
+        get: function () {
+            return this.signature.pages;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(PavlicekHandStrategy.prototype, "lastPage", {
+        get: function () {
+            return this.signature.lastPage;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    PavlicekHandStrategy.prototype.assertValidPage = function (pageNo, adjust) {
+        if (adjust === void 0) { adjust = BigInt(0); }
+        this.signature.assertValidPage(pageNo, adjust);
+    };
+    PavlicekHandStrategy.prototype.computePageContent = function (pageNo) {
+        this.assertValidPage(pageNo);
+        var rawDeal = this.pStrategy.computePageContent(pageNo);
+        return rawDeal.hands[0];
+    };
+    PavlicekHandStrategy.prototype.computePageNumber = function (cards) {
+        var toWhom = new Array(this.signature.cards);
+        for (var i = 0; i < this.signature.cards; i++) {
+            toWhom[i] = 1;
+        }
+        cards.forEach(function (card) {
+            toWhom[card] = 0;
+        });
+        var deal = new NumericDeal(this.pStrategy.signature, toWhom);
+        return this.pStrategy.computePageNumber(deal);
+    };
+    return PavlicekHandStrategy;
+}());
+export { PavlicekStrategy, PavlicekHandStrategy };
