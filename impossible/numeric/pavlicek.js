@@ -116,11 +116,12 @@ var PavlicekDealStrategy = /** @class */ (function () {
     return PavlicekDealStrategy;
 }());
 var PavlicekHandStrategy = /** @class */ (function () {
-    function PavlicekHandStrategy(sig) {
+    function PavlicekHandStrategy(sig, cls) {
         if (sig === void 0) { sig = bridgeHandSignature; }
+        if (cls === void 0) { cls = PavlicekDealStrategy; }
         this.signature = sig;
         var dSig = new DealSignature([sig.handLength, sig.cards - sig.handLength]);
-        this.pStrategy = new PavlicekDealStrategy(dSig);
+        this.pStrategy = new cls(dSig);
     }
     Object.defineProperty(PavlicekHandStrategy.prototype, "pages", {
         get: function () {
