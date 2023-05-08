@@ -1,5 +1,5 @@
 // Common numeric deal logic and types
-import { multinomial, choose } from "./choose";
+import { multinomial, choose } from "./choose.js";
 var DealSignature = /** @class */ (function () {
     function DealSignature(cardsPerSeat) {
         this.perSeat = Array.from(cardsPerSeat);

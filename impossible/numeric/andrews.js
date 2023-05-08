@@ -1,7 +1,7 @@
 //  An entirely numeric version of the book
-import { bridgeSignature, bridgeHandSignature, NumericDeal } from "./deal";
-import { choose } from "./choose";
-import * as squashed from './squashed';
+import { bridgeSignature, bridgeHandSignature, NumericDeal } from "./deal.js";
+import { choose } from "./choose.js";
+import * as squashed from "./squashed.js";
 function computeFactors(cardsPer) {
     var totalCards = 0;
     var totalProduct = BigInt(1);

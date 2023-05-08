@@ -1,5 +1,5 @@
 // A crude way to create scrambled deal strategies
-import { modular_inverse, safe_mod } from "./modinverse";
+import { modular_inverse, safe_mod } from "./modinverse.js";
 var MultiplierScrambler = /** @class */ (function () {
     function MultiplierScrambler(pages, multiplier, translate) {
         var inverse = modular_inverse(pages, multiplier);

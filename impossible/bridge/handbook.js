@@ -1,5 +1,5 @@
-import { defaultBijectionCard } from './bijection';
-import { Hand } from "./deal";
+import { defaultBijectionCard } from "./bijection.js";
+import { Hand } from "./deal.js";
 function assertBridgeHandStrategy(strategy) {
     var sig = strategy.signature;
     if (sig.handLength != 13 || sig.cards != 52) {

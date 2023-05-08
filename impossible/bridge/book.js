@@ -1,7 +1,7 @@
-import { Deck } from "./constants";
-import { NumericDeal, bridgeSignature } from "../numeric/index";
-import { SimpleBijection, defaultBijectionCard, defaultBijectionSeat } from './bijection';
-import { Deal } from "./deal";
+import { Deck } from "./constants.js";
+import { NumericDeal, bridgeSignature } from "../numeric/index.js";
+import { SimpleBijection, defaultBijectionCard, defaultBijectionSeat } from "./bijection.js";
+import { Deal } from "./deal.js";
 function validate_signature(signature) {
     if (!bridgeSignature.equals(signature)) {
         throw new TypeError('Invalid signature');
