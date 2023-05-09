@@ -1,4 +1,4 @@
-import { Deck } from "./constants.js";
+import { Deck } from "../basics/src/bridge/constants.js";
 import { NumericDeal, bridgeSignature } from "../numeric/index.js";
 import { SimpleBijection, defaultBijectionCard, defaultBijectionSeat } from "./bijection.js";
 import { Deal } from "./deal.js";

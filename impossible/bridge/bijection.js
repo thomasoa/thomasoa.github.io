@@ -1,4 +1,4 @@
-import { Deck, Seats } from "./constants.js";
+import { Deck, Seats } from "../basics/src/bridge/constants.js";
 var SimpleBijection = /** @class */ (function () {
     function SimpleBijection(allT, map) {
         if (map === void 0) { map = function (n) { return n; }; }

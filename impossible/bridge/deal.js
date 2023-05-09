@@ -1,4 +1,4 @@
-import { Deck, Seats } from "./constants.js";
+import { Deck, Seats } from "../basics/src/bridge/constants.js";
 var Holding = /** @class */ (function () {
     function Holding(ranks) {
         this.bits = ranks.reduce(function (binary, rank) { return rank.bit | binary; }, 0);

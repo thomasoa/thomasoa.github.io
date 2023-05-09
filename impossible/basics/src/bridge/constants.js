@@ -29,6 +29,7 @@
  *     Deck.Suits.spades, ..., Deck.Suits.clubs
  *
  */
+import { UpcaseMap } from "../generic/maps";
 function f(obj) {
     Object.freeze(obj);
     return obj;
@@ -40,6 +41,11 @@ var West = { name: "west", letter: "W", order: 3 };
 var AllSeats = [North, East, South, West];
 AllSeats.forEach(Object.freeze);
 Object.freeze(AllSeats);
+var SeatNameMap = new UpcaseMap();
+AllSeats.forEach(function (seat) {
+    SeatNameMap.set(seat.name, seat);
+    SeatNameMap.set(seat.letter, seat);
+});
 var Seats = {
     north: North,
     east: East,
@@ -47,7 +53,8 @@ var Seats = {
     west: West,
     all: AllSeats,
     each: AllSeats.forEach.bind(AllSeats),
-    map: AllSeats.map.bind(AllSeats)
+    map: AllSeats.map.bind(AllSeats),
+    byText: SeatNameMap.get.bind(SeatNameMap)
 };
 Object.freeze(Seats);
 var Rank = /** @class */ (function () {
@@ -62,12 +69,18 @@ var Rank = /** @class */ (function () {
     }
     return Rank;
 }());
-var Spades = f({ name: 'spades', letter: 'S', symbol: '\U+2660', order: 0, summand: 0 });
-var Hearts = f({ name: 'hearts', letter: 'H', symbol: '\U+2665', order: 1, summand: 13 * 1 });
-var Diamonds = f({ name: 'diamonds', letter: 'D', symbol: '\U+2666', order: 2, summand: 13 * 2 });
-var Clubs = f({ name: 'clubs', letter: 'C', symbol: '\U+2663', order: 3, summand: 13 * 3 });
+var Spades = f({ name: 'spades', singular: 'spade', letter: 'S', symbol: '\U+2660', order: 0, summand: 0 });
+var Hearts = f({ name: 'hearts', singular: 'heart', letter: 'H', symbol: '\U+2665', order: 1, summand: 13 * 1 });
+var Diamonds = f({ name: 'diamonds', singular: 'diamond', letter: 'D', symbol: '\U+2666', order: 2, summand: 13 * 2 });
+var Clubs = f({ name: 'clubs', singular: 'club', letter: 'C', symbol: '\U+2663', order: 3, summand: 13 * 3 });
 var AllSuits = [Spades, Hearts, Diamonds, Clubs];
 Object.freeze(AllSuits);
+var SuitNameMap = new UpcaseMap();
+AllSuits.forEach(function (suit) {
+    SuitNameMap.set(suit.name, suit);
+    SuitNameMap.set(suit.letter, suit);
+    SuitNameMap.set(suit.singular, suit);
+});
 var Suits = {
     spades: Spades,
     hearts: Hearts,
@@ -75,7 +88,8 @@ var Suits = {
     clubs: Clubs,
     all: AllSuits,
     each: AllSuits.forEach.bind(AllSuits),
-    map: AllSuits.map.bind(AllSuits)
+    map: AllSuits.map.bind(AllSuits),
+    byText: SuitNameMap.get.bind(SuitNameMap)
 };
 Suits.each(Object.freeze);
 Object.freeze(Suits);
@@ -132,7 +146,7 @@ var RankParser = /** @class */ (function () {
     return RankParser;
 }());
 function createRankParser() {
-    var map = new Map();
+    var map = new UpcaseMap();
     var add = function (parser) {
         map.set(parser.letter, parser);
     };
@@ -209,7 +223,16 @@ function make_cards() {
     return f(cards);
 }
 var AllCards = make_cards();
-var CardsByName = new Map(AllCards.map(function (card) { return [card.short, card]; }));
+var CardsByName = new UpcaseMap();
+AllCards.forEach(function (card) {
+    var rank = card.rank;
+    var suit = card.suit;
+    var rankStrings = [rank.brief, rank.letter];
+    rankStrings.forEach(function (rankStr) {
+        CardsByName.set(suit.letter + rankStr, card);
+        CardsByName.set(rankStr + suit.letter, card);
+    });
+});
 function cardBySuitRank(suit, rank) {
     return AllCards[suit.summand + rank.summand];
 }
