@@ -29,7 +29,7 @@
  *     Deck.Suits.spades, ..., Deck.Suits.clubs
  *
  */
-import { UpcaseMap } from "../generic/maps";
+import { UpcaseMap } from "../generic/maps.js";
 function f(obj) {
     Object.freeze(obj);
     return obj;
