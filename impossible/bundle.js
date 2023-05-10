@@ -4,6 +4,150 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.App = void 0;
+exports.initialize = initialize;
+var _application = require("./model/application.js");
+var App = new _application.Application();
+exports.App = App;
+function backDeal() {
+  App.previousDeal();
+  return false;
+}
+function fowardDeal() {
+  App.nextDeal();
+  return false;
+}
+function firstDeal() {
+  App.chooseCurrent(0);
+  return false;
+}
+function lastDeal() {
+  App.chooseCurrent(App.length - 1);
+  return false;
+}
+function onReset() {
+  var dealLoc = $('#deal');
+  dealLoc.hide();
+}
+function visibility(flag) {
+  return flag ? 'visible' : 'hidden';
+}
+function setVisibility(selector, flag) {
+  $(selector).css('visibility', visibility(flag));
+}
+function updatePreviousNext() {
+  setVisibility('#backwards', App.allowPrevious);
+  setVisibility('#forwards', App.allowNext);
+}
+function getTitle(dealInfo) {
+  var title = dealInfo.edition + " Edition";
+  if (dealInfo.scrambled) {
+    title = "Scrambled " + title;
+  }
+  return title;
+}
+function updateDeal(deal) {
+  deal.eachHand((seat, hand) => {
+    var handDiv = $('.diagram .' + seat.name);
+    hand.eachSuit((suit, holding) => {
+      var hString = holding.toString();
+      if (hString == '-') {
+        hString = '\u2014';
+      } // emdash 
+      handDiv.find('.' + suit.name + ' span.holding').text(hString);
+    });
+  });
+}
+function updateCurrentDeal(dealInfo) {
+  var dealLoc = $('#deal');
+  $('#dealIndex').text(dealInfo.index + 1);
+  var title = getTitle(dealInfo);
+  $('.bookTitle').text(title);
+  $('#error').hide();
+  $('.pageNumber').text(dealInfo.pageNo);
+  updatePreviousNext();
+  updateDeal(dealInfo.deal);
+  // var hands = dealInfo.deal.hands.map((hand) => hand.toString()).join("\n")
+  dealLoc.show();
+}
+function updateDealCount(count) {
+  $('#dealCount').text(count);
+  updatePreviousNext();
+}
+function reset() {
+  App.reset();
+  $('#lookup').find('input[name="pageNumbers"]').val('');
+}
+function initialize() {
+  App.listenCurrentDeal(updateCurrentDeal);
+  App.listenDealCount(updateDealCount);
+  App.listenReset(onReset);
+  const form = $('#lookup');
+  form.submit(() => {
+    submit_pages(form);
+    return false;
+  });
+  $('#reset').on('click', () => reset());
+  $('#firstDeal').on('click', () => firstDeal());
+  $('#lastDeal').on('click', () => lastDeal());
+  $('a.powersOf10').on('click', powersOf(10));
+  $('a.powersOf2').on('click', powersOf(2));
+  $('#back').on('click', () => backDeal());
+  $('#forward').on('click', () => fowardDeal());
+  App.reset();
+}
+function determineEdition(form) {
+  /*
+   * Returns object: {name:string, scrambled:boolean}
+   */
+  form = form || $('form#lookup');
+  var scramble = form.find('select[name="scramble"]').val();
+  var edition = form.find('select[name="edition"]').val();
+  return {
+    name: edition,
+    scrambled: scramble == 'Scrambled'
+  };
+}
+function submitPages(pageNumbers, form) {
+  var edition = determineEdition(form);
+  App.findDeals(edition.name, edition.scrambled, pageNumbers);
+}
+function submit_pages(form) {
+  try {
+    var pageEntry = form.find('input[name="pageNumbers"]');
+    var pageText = $(pageEntry).val();
+    var pages = pageText.split(',').map(page => BigInt(page));
+    submitPages(pages, form);
+    $(pageEntry).val('');
+    $('#error').hide();
+  } catch (e) {
+    console.error(e);
+    $('#error').text(e);
+    $('#error').show();
+    return false;
+  }
+}
+function powersOf(n) {
+  return function () {
+    n = BigInt(n);
+    var power = BigInt(1);
+    var result = [];
+    while (power < App.lastPage) {
+      result.push(power);
+      power *= n;
+    }
+    submitPages(result);
+    return false;
+  };
+}
+$(document).ready(() => initialize());
+
+},{"./model/application.js":8}],2:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 exports.Seats = exports.Rank = exports.Deck = exports.Card = void 0;
 var _maps = require("../generic/maps.js");
 /**
@@ -336,7 +480,7 @@ var Deck = {
 exports.Deck = Deck;
 Object.freeze(Deck);
 
-},{"../generic/maps.js":2}],2:[function(require,module,exports){
+},{"../generic/maps.js":3}],3:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -397,7 +541,7 @@ var UpcaseMap = /** @class */function (_super) {
 }(TransformKeyMap);
 exports.UpcaseMap = UpcaseMap;
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -435,7 +579,7 @@ exports.defaultBijectionSeat = defaultBijectionSeat;
 var defaultBijectionCard = new SimpleBijection(_constants.Deck.cards.all);
 exports.defaultBijectionCard = defaultBijectionCard;
 
-},{"../basics/src/bridge/constants.js":1}],4:[function(require,module,exports){
+},{"../basics/src/bridge/constants.js":2}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -522,7 +666,7 @@ var BridgeBook = /** @class */function () {
 }();
 exports.BridgeBook = BridgeBook;
 
-},{"../basics/src/bridge/constants.js":1,"../numeric/index.js":12,"./bijection.js":3,"./deal.js":5}],5:[function(require,module,exports){
+},{"../basics/src/bridge/constants.js":2,"../numeric/index.js":13,"./bijection.js":4,"./deal.js":6}],6:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -725,7 +869,7 @@ var Deal = /** @class */function () {
 }();
 exports.Deal = Deal;
 
-},{"../basics/src/bridge/constants.js":1}],6:[function(require,module,exports){
+},{"../basics/src/bridge/constants.js":2}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -789,7 +933,7 @@ var _constants = require("../basics/src/bridge/constants.js");
 var _book = require("./book.js");
 var _deal = require("./deal.js");
 
-},{"../basics/src/bridge/constants.js":1,"./book.js":4,"./deal.js":5}],7:[function(require,module,exports){
+},{"../basics/src/bridge/constants.js":2,"./book.js":5,"./deal.js":6}],8:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -945,7 +1089,7 @@ var Application = /** @class */function () {
 }();
 exports.Application = Application;
 
-},{"./books.js":8}],8:[function(require,module,exports){
+},{"./books.js":9}],9:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1039,7 +1183,7 @@ var BookSet = /** @class */function () {
 }();
 exports.BookSet = BookSet;
 
-},{"../bridge/index.js":6,"../numeric/index.js":12}],9:[function(require,module,exports){
+},{"../bridge/index.js":7,"../numeric/index.js":13}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1219,7 +1363,7 @@ var AndrewsHandStrategy = /** @class */function () {
 }();
 exports.AndrewsHandStrategy = AndrewsHandStrategy;
 
-},{"./choose.js":10,"./deal.js":11,"./squashed.js":16}],10:[function(require,module,exports){
+},{"./choose.js":11,"./deal.js":12,"./squashed.js":17}],11:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1301,7 +1445,7 @@ var multinomial = function (parts) {
 };
 exports.multinomial = multinomial;
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1476,7 +1620,7 @@ exports.NumericDeal = NumericDeal;
 var bridgeHandSignature = new HandSignature(13, 52);
 exports.bridgeHandSignature = bridgeHandSignature;
 
-},{"./choose.js":10}],12:[function(require,module,exports){
+},{"./choose.js":11}],13:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1547,7 +1691,7 @@ var _andrews = require("./andrews.js");
 var _pavlicek = require("./pavlicek.js");
 var _scramble = require("./scramble.js");
 
-},{"./andrews.js":9,"./deal.js":11,"./pavlicek.js":14,"./scramble.js":15}],13:[function(require,module,exports){
+},{"./andrews.js":10,"./deal.js":12,"./pavlicek.js":15,"./scramble.js":16}],14:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1630,7 +1774,7 @@ function modular_inverse(modulus, unit) {
   return buildInverseFromQuotients(result.quotients);
 }
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1816,7 +1960,7 @@ var PavlicekHandStrategy = /** @class */function () {
 }();
 exports.PavlicekHandStrategy = PavlicekHandStrategy;
 
-},{"./deal.js":11}],15:[function(require,module,exports){
+},{"./deal.js":12}],16:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1882,7 +2026,7 @@ function scramble_book(base, multiplier, translate) {
   return new ScrambleStrategy(base, scrambler);
 }
 
-},{"./modinverse.js":13}],16:[function(require,module,exports){
+},{"./modinverse.js":14}],17:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1949,148 +2093,4 @@ function decode(index, n) {
   return result;
 }
 
-},{"./choose.js":10}],17:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.App = void 0;
-exports.initialize = initialize;
-var _application = require("../model/application.js");
-var App = new _application.Application();
-exports.App = App;
-function backDeal() {
-  App.previousDeal();
-  return false;
-}
-function fowardDeal() {
-  App.nextDeal();
-  return false;
-}
-function firstDeal() {
-  App.chooseCurrent(0);
-  return false;
-}
-function lastDeal() {
-  App.chooseCurrent(App.length - 1);
-  return false;
-}
-function onReset() {
-  var dealLoc = $('#deal');
-  dealLoc.hide();
-}
-function visibility(flag) {
-  return flag ? 'visible' : 'hidden';
-}
-function setVisibility(selector, flag) {
-  $(selector).css('visibility', visibility(flag));
-}
-function updatePreviousNext() {
-  setVisibility('#backwards', App.allowPrevious);
-  setVisibility('#forwards', App.allowNext);
-}
-function getTitle(dealInfo) {
-  var title = dealInfo.edition + " Edition";
-  if (dealInfo.scrambled) {
-    title = "Scrambled " + title;
-  }
-  return title;
-}
-function updateDeal(deal) {
-  deal.eachHand((seat, hand) => {
-    var handDiv = $('.diagram .' + seat.name);
-    hand.eachSuit((suit, holding) => {
-      var hString = holding.toString();
-      if (hString == '-') {
-        hString = '\u2014';
-      } // emdash 
-      handDiv.find('.' + suit.name + ' span.holding').text(hString);
-    });
-  });
-}
-function updateCurrentDeal(dealInfo) {
-  var dealLoc = $('#deal');
-  $('#dealIndex').text(dealInfo.index + 1);
-  var title = getTitle(dealInfo);
-  $('.bookTitle').text(title);
-  $('#error').hide();
-  $('.pageNumber').text(dealInfo.pageNo);
-  updatePreviousNext();
-  updateDeal(dealInfo.deal);
-  // var hands = dealInfo.deal.hands.map((hand) => hand.toString()).join("\n")
-  dealLoc.show();
-}
-function updateDealCount(count) {
-  $('#dealCount').text(count);
-  updatePreviousNext();
-}
-function reset() {
-  App.reset();
-  $('#lookup').find('input[name="pageNumbers"]').val('');
-}
-function initialize() {
-  App.listenCurrentDeal(updateCurrentDeal);
-  App.listenDealCount(updateDealCount);
-  App.listenReset(onReset);
-  const form = $('#lookup');
-  form.submit(() => {
-    submit_pages(form);
-    return false;
-  });
-  $('#reset').on('click', () => reset());
-  $('#firstDeal').on('click', () => firstDeal());
-  $('#lastDeal').on('click', () => lastDeal());
-  $('a.powersOf10').on('click', powersOf(10));
-  $('a.powersOf2').on('click', powersOf(2));
-  $('#back').on('click', () => backDeal());
-  $('#forward').on('click', () => fowardDeal());
-  App.reset();
-}
-function determineEdition(form) {
-  /*
-   * Returns object: {name:string, scrambled:boolean}
-   */
-  form = form || $('form#lookup');
-  var scramble = form.find('select[name="scramble"]').val();
-  var edition = form.find('select[name="edition"]').val();
-  return {
-    name: edition,
-    scrambled: scramble == 'Scrambled'
-  };
-}
-function submitPages(pageNumbers, form) {
-  var edition = determineEdition(form);
-  App.findDeals(edition.name, edition.scrambled, pageNumbers);
-}
-function submit_pages(form) {
-  try {
-    var pageEntry = form.find('input[name="pageNumbers"]');
-    var pageText = $(pageEntry).val();
-    var pages = pageText.split(',').map(page => BigInt(page));
-    submitPages(pages, form);
-    $(pageEntry).val('');
-    $('#error').hide();
-  } catch (e) {
-    console.error(e);
-    $('#error').text(e);
-    $('#error').show();
-    return false;
-  }
-}
-function powersOf(n) {
-  return function () {
-    n = BigInt(n);
-    var power = BigInt(1);
-    var result = [];
-    while (power < App.lastPage) {
-      result.push(power);
-      power *= n;
-    }
-    submitPages(result);
-    return false;
-  };
-}
-$(document).ready(() => initialize());
-
-},{"../model/application.js":7}]},{},[17]);
+},{"./choose.js":11}]},{},[1]);
