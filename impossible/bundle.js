@@ -26,8 +26,8 @@ function lastDeal() {
   return false;
 }
 function onReset() {
-  var dealLoc = $('#deal');
-  dealLoc.hide();
+  $('#deal').hide();
+  $('#preface').show();
 }
 function visibility(flag) {
   return flag ? 'visible' : 'hidden';
@@ -47,6 +47,7 @@ function getTitle(dealInfo) {
   return title;
 }
 function updateDeal(deal) {
+  $('#preface').hide();
   deal.eachHand((seat, hand) => {
     var handDiv = $('.diagram .' + seat.name);
     hand.eachSuit((suit, holding) => {
@@ -76,7 +77,6 @@ function updateDealCount(count) {
 }
 function reset() {
   App.reset();
-  $('#lookup').find('input[name="pageNumbers"]').val('');
 }
 function initialize() {
   App.listenCurrentDeal(updateCurrentDeal);
@@ -203,6 +203,9 @@ var Seat = /** @class */function () {
     enumerable: false,
     configurable: true
   });
+  Seat.prototype.select = function (tuple) {
+    return tuple[this.order];
+  };
   Seat.prototype.shift = function (positive) {
     return Seat.AllSeats[(this.order + positive) % 4];
   };
@@ -269,11 +272,19 @@ var Rank = /** @class */function () {
   return Rank;
 }();
 exports.Rank = Rank;
+function suitSelector(order) {
+  return function (tuple) {
+    return tuple[order];
+  };
+}
 var Spades = f({
   name: 'spades',
   singular: 'spade',
   letter: 'S',
   symbol: '\U+2660',
+  color: "black",
+  type: "major",
+  select: suitSelector(0),
   order: 0,
   summand: 0
 });
@@ -282,6 +293,9 @@ var Hearts = f({
   singular: 'heart',
   letter: 'H',
   symbol: '\U+2665',
+  color: "red",
+  type: "major",
+  select: suitSelector(1),
   order: 1,
   summand: 13 * 1
 });
@@ -290,6 +304,9 @@ var Diamonds = f({
   singular: 'diamond',
   letter: 'D',
   symbol: '\U+2666',
+  color: "red",
+  type: "minor",
+  select: suitSelector(2),
   order: 2,
   summand: 13 * 2
 });
@@ -298,6 +315,9 @@ var Clubs = f({
   singular: 'club',
   letter: 'C',
   symbol: '\U+2663',
+  color: "black",
+  type: "minor",
+  select: suitSelector(3),
   order: 3,
   summand: 13 * 3
 });
@@ -315,6 +335,8 @@ var Suits = {
   diamonds: Diamonds,
   clubs: Clubs,
   all: AllSuits,
+  majors: [Spades, Hearts],
+  minors: [Diamonds, Clubs],
   each: AllSuits.forEach.bind(AllSuits),
   map: AllSuits.map.bind(AllSuits),
   byText: SuitNameMap.get.bind(SuitNameMap)
@@ -567,6 +589,12 @@ var Holding = /** @class */function () {
   Holding.prototype.has = function (rank) {
     return (this.bits & rank.bit) != 0;
   };
+  Holding.prototype.remove = function (rank) {
+    if (this.has(rank)) {
+      return new Holding(this.bits & ~rank.bit);
+    }
+    throw new Error('Cannot remove rank ' + rank.name + ' from holding ' + this.asString());
+  };
   Holding.prototype.above = function (rank) {
     return new Holding(this.bits & ~((rank.bit << 1) - 1));
   };
@@ -602,6 +630,9 @@ var Holding = /** @class */function () {
     enumerable: false,
     configurable: true
   });
+  Holding.prototype.isSpot = function (rank) {
+    return false;
+  };
   Holding.lwHoldings = new Array(1 << 13);
   return Holding;
 }();
@@ -618,6 +649,8 @@ var XHolding = /** @class */function () {
     }
     this.holding = new Holding(topCards.bits | spotBits);
     this.spots = spots;
+    this.spotBits = spotBits;
+    this.nonSpots = topCards;
   }
   Object.defineProperty(XHolding.prototype, "length", {
     get: function () {
@@ -640,6 +673,40 @@ var XHolding = /** @class */function () {
       return '-';
     }
     return this.holding.ranks.map(this.rankText.bind(this)).join(divider);
+  };
+  Object.defineProperty(XHolding.prototype, "ranks", {
+    get: function () {
+      return this.holding.ranks;
+    },
+    enumerable: false,
+    configurable: true
+  });
+  XHolding.prototype.has = function (rank) {
+    return this.holding.has(rank);
+  };
+  XHolding.prototype.isSpot = function (rank) {
+    return rank.order + this.spots >= 13;
+  };
+  Object.defineProperty(XHolding.prototype, "topSpot", {
+    get: function () {
+      if (this.spots) {
+        return _constants.Deck.ranks.all[13 - this.spots];
+      }
+      throw new Error('No spots, so no topSpot');
+    },
+    enumerable: false,
+    configurable: true
+  });
+  XHolding.prototype.remove = function (rank) {
+    if (this.has(rank)) {
+      var h = this.nonSpots;
+      if (this.isSpot(rank)) {
+        return new XHolding(h, this.spots - 1);
+      } else {
+        return new XHolding(h.remove(rank), this.spots);
+      }
+    }
+    throw new Error('Cannot remove rank ' + rank.name + ' from holding ' + this.asString());
   };
   return XHolding;
 }();
