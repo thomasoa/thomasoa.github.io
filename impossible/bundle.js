@@ -46,16 +46,34 @@ function getTitle(dealInfo) {
   }
   return title;
 }
+function englishHolding(holding) {
+  if (holding.length == 0) {
+    return 'void';
+  }
+  var cards = holding.ranks.map(rank => rank.name);
+  if (holding.spots > 0) {
+    cards.push(holding.spots.toString() + ' small spots');
+  }
+  if (cards.length == 1) {
+    return cards[0];
+  }
+  cards[cards.length - 1] = ' and ' + cards[cards.length - 1];
+  return cards.join(', ');
+}
 function updateDeal(deal) {
   $('#preface').hide();
   deal.eachHand((seat, hand) => {
     var handDiv = $('.diagram .' + seat.name);
     hand.eachSuit((suit, holding) => {
       var hString = holding.toString();
+      var language = suit.singular + ' ' + englishHolding(holding);
+      console.log(hString, language);
       if (hString == '-') {
         hString = '\u2014';
       } // emdash 
-      handDiv.find('.' + suit.name + ' span.holding').text(hString);
+      var suitSpan = '.' + suit.name + ' span.holding';
+      handDiv.find(suitSpan).text(hString);
+      handDiv.find(suitSpan).attr('title', language);
     });
   });
 }
@@ -148,7 +166,7 @@ $(document).ready(() => initialize());
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Seats = exports.Seat = exports.Rank = exports.Deck = exports.Card = void 0;
+exports.Suit = exports.Seats = exports.Seat = exports.Rank = exports.Deck = exports.Card = void 0;
 var _maps = require("../generic/maps.js");
 /**
  * A set of constant describing things related to bridge deals.
@@ -206,6 +224,15 @@ var Seat = /** @class */function () {
   Seat.prototype.select = function (tuple) {
     return tuple[this.order];
   };
+  Seat.prototype.for = function (record) {
+    return record[this.name];
+  };
+  Seat.prototype.set = function (aRec, value) {
+    aRec[this.name] = value;
+  };
+  Seat.prototype.unset = function (aRec) {
+    delete aRec[this.name];
+  };
   Seat.prototype.shift = function (positive) {
     return Seat.AllSeats[(this.order + positive) % 4];
   };
@@ -256,6 +283,27 @@ var Seats = {
 };
 exports.Seats = Seats;
 Object.freeze(Seats);
+var Suit = /** @class */function () {
+  function Suit(suit) {
+    for (var key in suit) {
+      this[key] = suit[key];
+    }
+  }
+  Suit.prototype.select = function (aTuple) {
+    return aTuple[this.order];
+  };
+  Suit.prototype.for = function (aRec) {
+    return aRec[this.name];
+  };
+  Suit.prototype.set = function (aRec, value) {
+    aRec[this.name] = value;
+  };
+  Suit.prototype.unset = function (aRec) {
+    delete aRec[this.name];
+  };
+  return Suit;
+}();
+exports.Suit = Suit;
 var Rank = /** @class */function () {
   function Rank(brief, name, order, letter) {
     if (letter === void 0) {
@@ -272,52 +320,43 @@ var Rank = /** @class */function () {
   return Rank;
 }();
 exports.Rank = Rank;
-function suitSelector(order) {
-  return function (tuple) {
-    return tuple[order];
-  };
-}
-var Spades = f({
+var Spades = new Suit({
   name: 'spades',
   singular: 'spade',
   letter: 'S',
   symbol: '\U+2660',
   color: "black",
   type: "major",
-  select: suitSelector(0),
   order: 0,
   summand: 0
 });
-var Hearts = f({
+var Hearts = new Suit({
   name: 'hearts',
   singular: 'heart',
   letter: 'H',
   symbol: '\U+2665',
   color: "red",
   type: "major",
-  select: suitSelector(1),
   order: 1,
   summand: 13 * 1
 });
-var Diamonds = f({
+var Diamonds = new Suit({
   name: 'diamonds',
   singular: 'diamond',
   letter: 'D',
   symbol: '\U+2666',
   color: "red",
   type: "minor",
-  select: suitSelector(2),
   order: 2,
   summand: 13 * 2
 });
-var Clubs = f({
+var Clubs = new Suit({
   name: 'clubs',
   singular: 'club',
   letter: 'C',
   symbol: '\U+2663',
   color: "black",
   type: "minor",
-  select: suitSelector(3),
   order: 3,
   summand: 13 * 3
 });
@@ -550,6 +589,7 @@ Object.defineProperty(exports, "Rank", {
   }
 });
 exports.XHolding = void 0;
+exports.parseHolding = parseHolding;
 var _constants = require("./constants.js");
 var Holding = /** @class */function () {
   function Holding(bits) {
@@ -583,6 +623,13 @@ var Holding = /** @class */function () {
   Holding.prototype.isVoid = function () {
     return this.length == 0;
   };
+  Holding.prototype.isDisjoint = function (h) {
+    return !(this.bits & h.holding.bits);
+  };
+  Holding.prototype.union = function (h) {
+    var newH = new Holding(h.nonSpots.bits | this.bits);
+    return newH.addSpots(h.spots);
+  };
   Holding.prototype.toString = function () {
     return this.asString(' ');
   };
@@ -605,7 +652,10 @@ var Holding = /** @class */function () {
     if (spots === void 0) {
       spots = 1;
     }
-    return new XHolding(this, spots);
+    if (spots > 0) {
+      return new XHolding(this, spots);
+    }
+    return this;
   };
   Holding.prototype.removeSpots = function (spots) {
     if (spots === void 0) {
@@ -616,6 +666,13 @@ var Holding = /** @class */function () {
     }
     throw new Error('No spots in holding ' + this.asString());
   };
+  Object.defineProperty(Holding.prototype, "nonSpots", {
+    get: function () {
+      return this;
+    },
+    enumerable: false,
+    configurable: true
+  });
   Holding.prototype.above = function (rank) {
     return new Holding(this.bits & ~((rank.bit << 1) - 1));
   };
@@ -705,6 +762,20 @@ var XHolding = /** @class */function () {
   XHolding.prototype.has = function (rank) {
     return this.holding.has(rank);
   };
+  XHolding.prototype.isDisjoint = function (h) {
+    if (this.nonSpots.bits & h.nonSpots.bits) {
+      console.log('Nonspots are not disjoint for ' + h.asString() + ' ' + this.asString());
+      return false;
+    }
+    var combined = this.nonSpots.bits | h.nonSpots.bits;
+    var spotBits = (1 << this.spots + h.spots) - 1;
+    console.log('Bits ' + (combined & spotBits) + ' ' + spotBits + ' for ' + h.asString() + ' ' + this.asString());
+    return !(combined & spotBits);
+  };
+  XHolding.prototype.union = function (h) {
+    var newH = this.nonSpots.union(h);
+    return newH.addSpots(this.spots);
+  };
   XHolding.prototype.isSpot = function (rank) {
     return rank.order + this.spots >= 13;
   };
@@ -749,6 +820,23 @@ var XHolding = /** @class */function () {
   return XHolding;
 }();
 exports.XHolding = XHolding;
+var parseRE = /^([^X]*)(X*)$/;
+function parseHolding(start) {
+  var str = start.replace(/\s/g, '').toUpperCase();
+  if (str == '-') {
+    return new Holding(0);
+  }
+  var match = str.match(parseRE);
+  if (match) {
+    var holding = Holding.forString(match[1]);
+    var spots = match[2].length;
+    if (spots > 0) {
+      return new XHolding(holding, spots);
+    }
+    return holding;
+  }
+  throw new Error('Improper holding string "' + start + '" as "' + str + '"');
+}
 
 },{"./constants.js":2}],4:[function(require,module,exports){
 "use strict";
@@ -851,6 +939,12 @@ Object.defineProperty(exports, "Seats", {
   enumerable: true,
   get: function () {
     return _constants.Seats;
+  }
+});
+Object.defineProperty(exports, "Suit", {
+  enumerable: true,
+  get: function () {
+    return _constants.Suit;
   }
 });
 Object.defineProperty(exports, "XHolding", {
@@ -1217,6 +1311,12 @@ Object.defineProperty(exports, "SimpleBijection", {
   enumerable: true,
   get: function () {
     return _book.SimpleBijection;
+  }
+});
+Object.defineProperty(exports, "Suit", {
+  enumerable: true,
+  get: function () {
+    return _index.Suit;
   }
 });
 var _index = require("../basics/src/index.js");
