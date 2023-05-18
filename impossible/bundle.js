@@ -64,7 +64,7 @@ function updateDeal(deal) {
   $('#preface').hide();
   deal.eachHand((seat, hand) => {
     var handDiv = $('.diagram .' + seat.name);
-    hand.eachSuit((suit, holding) => {
+    hand.eachSuit((holding, suit) => {
       var hString = holding.toString();
       var language = suit.singular + ' ' + englishHolding(holding);
       if (hString == '-') {
@@ -171,7 +171,7 @@ function multiplesOf1E27() {
 }
 $(document).ready(() => initialize());
 
-},{"./model/application.js":10}],2:[function(require,module,exports){
+},{"./model/application.js":11}],2:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -232,8 +232,12 @@ var Seat = /** @class */function () {
     enumerable: false,
     configurable: true
   });
-  Seat.prototype.select = function (tuple) {
-    return tuple[this.order];
+  Seat.prototype.value = function (tuple, value) {
+    var oldValue = tuple[this.order];
+    if (value) {
+      tuple[this.order] = value;
+    }
+    return oldValue;
   };
   Seat.prototype.for = function (record) {
     return record[this.name];
@@ -301,8 +305,12 @@ var Suit = /** @class */function () {
       this[key] = suit[key];
     }
   }
-  Suit.prototype.select = function (aTuple) {
-    return aTuple[this.order];
+  Suit.prototype.value = function (aTuple, value) {
+    var origValue = aTuple[this.order];
+    if (value) {
+      aTuple[this.order] = value;
+    }
+    return origValue;
   };
   Suit.prototype.for = function (aRec) {
     return aRec[this.name];
@@ -382,6 +390,9 @@ AllSuits.forEach(function (suit) {
 });
 function toSuitTuple(arg) {
   if (arg instanceof Array) {
+    if (arg.length != 4) {
+      throw new Error('Wrong number of suits');
+    }
     return arg;
   }
   var argRec = arg;
@@ -596,7 +607,315 @@ var Deck = {
 exports.Deck = Deck;
 Object.freeze(Deck);
 
-},{"../generic/maps.js":4}],3:[function(require,module,exports){
+},{"../generic/maps.js":6}],3:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.FullDeal = void 0;
+Object.defineProperty(exports, "FullHand", {
+  enumerable: true,
+  get: function () {
+    return _hand.FullHand;
+  }
+});
+var _constants = require("./constants");
+var _hand = require("./hand");
+var _holding = require("./holding");
+var FullDeal = /** @class */function () {
+  function FullDeal(whom) {
+    var bits = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+    _constants.Deck.cards.each(function (card) {
+      var seat = whom[card.order];
+      var newBits = card.rank.bit | card.suit.value(seat.value(bits));
+      card.suit.value(seat.value(bits), newBits);
+    });
+    this.hands = bits.map(function (handBits) {
+      var holdings = handBits.map(function (suitBits) {
+        return new _holding.Holding(suitBits);
+      });
+      return new _hand.FullHand(holdings);
+    });
+    this.toWhom = whom;
+  }
+  FullDeal.prototype.eachCard = function (method) {
+    this.toWhom.forEach(function (seat, index) {
+      return method(_constants.Deck.cards.all[index], seat);
+    });
+  };
+  FullDeal.prototype.hand = function (seat) {
+    return seat.value(this.hands);
+  };
+  Object.defineProperty(FullDeal.prototype, "north", {
+    get: function () {
+      return this.hand(_constants.Seats.north);
+    },
+    enumerable: false,
+    configurable: true
+  });
+  Object.defineProperty(FullDeal.prototype, "east", {
+    get: function () {
+      return this.hand(_constants.Seats.east);
+    },
+    enumerable: false,
+    configurable: true
+  });
+  Object.defineProperty(FullDeal.prototype, "south", {
+    get: function () {
+      return this.hand(_constants.Seats.south);
+    },
+    enumerable: false,
+    configurable: true
+  });
+  Object.defineProperty(FullDeal.prototype, "west", {
+    get: function () {
+      return this.hand(_constants.Seats.west);
+    },
+    enumerable: false,
+    configurable: true
+  });
+  FullDeal.prototype.eachHand = function (method) {
+    this.hands.forEach(function (hand, index) {
+      return method(_constants.Seats.all[index], hand);
+    });
+  };
+  FullDeal.prototype.equals = function (other) {
+    this.toWhom.forEach(function (seat, index) {
+      if (seat != other.toWhom[index]) {
+        return false;
+      }
+    });
+    return true;
+  };
+  return FullDeal;
+}();
+exports.FullDeal = FullDeal;
+
+},{"./constants":2,"./hand":4,"./holding":5}],4:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.PartialHand = exports.FullHand = void 0;
+Object.defineProperty(exports, "Suit", {
+  enumerable: true,
+  get: function () {
+    return _constants.Suit;
+  }
+});
+var _constants = require("./constants");
+var _holding = require("./holding");
+var __assign = void 0 && (void 0).__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+      for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+    }
+    return t;
+  };
+  return __assign.apply(this, arguments);
+};
+var PartialHand = /** @class */function () {
+  function PartialHand(holdings) {
+    if (holdings === void 0) {
+      holdings = {};
+    }
+    this.holdings = __assign({}, holdings); // Copy
+    var length = 0,
+      spots = 0;
+    this.eachHolding(function (sh) {
+      length += sh.holding.length;
+      spots += sh.holding.spots;
+    });
+    this.length = length;
+    this.spots = spots;
+  }
+  PartialHand.prototype.add = function (card) {
+    card.suit.set(this.holdings, this.safeHolding(card.suit).add(card.rank));
+    this.length++;
+  };
+  PartialHand.prototype.remove = function (card) {
+    card.suit.set(this.holdings, this.safeHolding(card.suit).remove(card.rank));
+    this.length--;
+  };
+  PartialHand.prototype.addSpots = function (suit, count) {
+    if (count === void 0) {
+      count = 1;
+    }
+    suit.set(this.holdings, this.safeHolding(suit).addSpots(count));
+    this.length += count;
+  };
+  PartialHand.prototype.addHolding = function (suit, holding) {
+    var current = this.safeHolding(suit);
+    if (current.isDisjoint(holding)) {
+      suit.set(this.holdings, current.union(holding));
+    } else {
+      throw new Error('Holdding ' + this.asString() + ' is not disjoint fron ' + holding.asString());
+    }
+  };
+  PartialHand.prototype.holding = function (suit) {
+    return suit.for(this.holdings);
+  };
+  PartialHand.prototype.safeHolding = function (suit) {
+    return this.holding(suit) || PartialHand.voidH;
+  };
+  PartialHand.prototype.has = function (card) {
+    return this.safeHolding(card.suit).has(card.rank);
+  };
+  PartialHand.prototype.isSpot = function (card) {
+    return this.safeHolding(card.suit).isSpot(card.rank);
+  };
+  PartialHand.prototype.eachHolding = function (callback) {
+    var _this = this;
+    _constants.Deck.suits.all.forEach(function (suit) {
+      var holding = _this.holding(suit);
+      if (holding) {
+        callback({
+          suit: suit,
+          holding: holding
+        });
+      }
+    });
+  };
+  PartialHand.prototype.eachCard = function (callback) {
+    this.eachHolding(function (sh) {
+      sh.holding.ranks.forEach(function (rank) {
+        return callback(rank.of(sh.suit), sh.holding.isSpot(rank));
+      });
+    });
+  };
+  PartialHand.prototype.asString = function (key) {
+    if (key === void 0) {
+      key = "letter";
+    }
+    var suits = new Array();
+    this.eachHolding(function (sh) {
+      suits.push(sh.suit[key] + sh.holding.asString(''));
+    });
+    return suits.join(' ');
+  };
+  PartialHand.voidH = new _holding.Holding(0);
+  return PartialHand;
+}();
+exports.PartialHand = PartialHand;
+var FullHand = /** @class */function () {
+  function FullHand(holdings) {
+    this.holdings = _constants.Deck.suits.toTuple(holdings);
+    var length = this.holdings.reduce(function (prev, h) {
+      return prev + h.length;
+    }, 0);
+    if (length != 13) {
+      throw new Error("Hand must have 13 cardds, got ".concat(length, " cards"));
+    }
+  }
+  FullHand.prototype.suit = function (suit) {
+    return suit.value(this.holdings);
+  };
+  FullHand.prototype.has = function (card) {
+    return this.suit(card.suit).has(card.rank);
+  };
+  Object.defineProperty(FullHand.prototype, "spades", {
+    get: function () {
+      return this.suit(_constants.Deck.suits.spades);
+    },
+    enumerable: false,
+    configurable: true
+  });
+  Object.defineProperty(FullHand.prototype, "hearts", {
+    get: function () {
+      return this.suit(_constants.Deck.suits.hearts);
+    },
+    enumerable: false,
+    configurable: true
+  });
+  Object.defineProperty(FullHand.prototype, "diamonds", {
+    get: function () {
+      return this.suit(_constants.Deck.suits.diamonds);
+    },
+    enumerable: false,
+    configurable: true
+  });
+  Object.defineProperty(FullHand.prototype, "clubs", {
+    get: function () {
+      return this.suit(_constants.Deck.suits.clubs);
+    },
+    enumerable: false,
+    configurable: true
+  });
+  FullHand.prototype.eachSuit = function (callback) {
+    var _this = this;
+    _constants.Deck.suits.all.forEach(function (suit) {
+      callback(_this.suit(suit), suit);
+    });
+  };
+  FullHand.prototype.eachCard = function (callback) {
+    this.eachSuit(function (holding, suit) {
+      holding.ranks.forEach(function (rank) {
+        callback(rank.of(suit));
+      });
+    });
+  };
+  FullHand.prototype.holding = function (suit) {
+    return suit.value(this.holdings);
+  };
+  FullHand.prototype.eachHolding = function (callback) {
+    var _this = this;
+    _constants.Deck.suits.all.forEach(function (suit) {
+      var holding = _this.holding(suit);
+      callback({
+        suit: suit,
+        holding: holding
+      });
+    });
+  };
+  FullHand.prototype.asString = function (key) {
+    if (key === void 0) {
+      key = "letter";
+    }
+    var suits = new Array();
+    this.eachHolding(function (sh) {
+      suits.push(sh.suit[key] + sh.holding.asString(''));
+    });
+    return suits.join(' ');
+  };
+  FullHand.prototype.toString = function () {
+    return this.asString();
+  };
+  FullHand.prototype.mapCards = function (callback) {
+    var result = new Array();
+    this.eachCard(function (card) {
+      result.push(callback(card));
+    });
+    return result;
+  };
+  FullHand.byCards = function (cards) {
+    var suitBits = [0, 0, 0, 0];
+    cards.forEach(function (card) {
+      var bits = card.suit.value(suitBits);
+      card.suit.value(suitBits, bits | card.rank.bit);
+    });
+    return new FullHand(suitBits.map(function (bits) {
+      return new _holding.Holding(bits);
+    }));
+  };
+  FullHand.forString = function (handString) {
+    handString = handString.toUpperCase();
+    var match = handString.match(/^ *S:?([^SHDC]*)H:?([^SHDC]*)D:?([^SHDC]*)C:?([^SHDC]*)$/);
+    if (match) {
+      var holdings = [match[1], match[2], match[3], match[4]].map(function (s) {
+        return _holding.Holding.forString(s.trim());
+      });
+      return new FullHand(holdings);
+    }
+    throw Error('Invalid hand string: ' + handString);
+  };
+  return FullHand;
+}();
+exports.FullHand = FullHand;
+
+},{"./constants":2,"./holding":5}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -791,12 +1110,10 @@ var XHolding = /** @class */function () {
   };
   XHolding.prototype.isDisjoint = function (h) {
     if (this.nonSpots.bits & h.nonSpots.bits) {
-      console.log('Nonspots are not disjoint for ' + h.asString() + ' ' + this.asString());
       return false;
     }
     var combined = this.nonSpots.bits | h.nonSpots.bits;
     var spotBits = (1 << this.spots + h.spots) - 1;
-    console.log('Bits ' + (combined & spotBits) + ' ' + spotBits + ' for ' + h.asString() + ' ' + this.asString());
     return !(combined & spotBits);
   };
   XHolding.prototype.union = function (h) {
@@ -865,7 +1182,7 @@ function parseHolding(start) {
   throw new Error('Improper holding string "' + start + '" as "' + str + '"');
 }
 
-},{"./constants.js":2}],4:[function(require,module,exports){
+},{"./constants.js":2}],6:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -926,7 +1243,7 @@ var UpcaseMap = /** @class */function (_super) {
 }(TransformKeyMap);
 exports.UpcaseMap = UpcaseMap;
 
-},{}],5:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -942,6 +1259,18 @@ Object.defineProperty(exports, "Deck", {
   enumerable: true,
   get: function () {
     return _constants.Deck;
+  }
+});
+Object.defineProperty(exports, "FullDeal", {
+  enumerable: true,
+  get: function () {
+    return _deal.FullDeal;
+  }
+});
+Object.defineProperty(exports, "FullHand", {
+  enumerable: true,
+  get: function () {
+    return _deal.FullHand;
   }
 });
 Object.defineProperty(exports, "Holding", {
@@ -982,8 +1311,9 @@ Object.defineProperty(exports, "XHolding", {
 });
 var _constants = require("./bridge/constants");
 var _holding = require("./bridge/holding");
+var _deal = require("./bridge/deal.js");
 
-},{"./bridge/constants":2,"./bridge/holding":3}],6:[function(require,module,exports){
+},{"./bridge/constants":2,"./bridge/deal.js":3,"./bridge/holding":5}],8:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1021,7 +1351,7 @@ exports.defaultBijectionSeat = defaultBijectionSeat;
 var defaultBijectionCard = new SimpleBijection(_index.Deck.cards.all);
 exports.defaultBijectionCard = defaultBijectionCard;
 
-},{"../basics/src/index.js":5}],7:[function(require,module,exports){
+},{"../basics/src/index.js":7}],9:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1038,7 +1368,6 @@ exports.validate_signature = validate_signature;
 var _index = require("../basics/src/index.js");
 var _index2 = require("../numeric/index.js");
 var _bijection = require("./bijection.js");
-var _deal = require("./deal.js");
 function validate_signature(signature) {
   if (!_index2.bridgeSignature.equals(signature)) {
     throw new TypeError('Invalid signature');
@@ -1087,7 +1416,7 @@ var BridgeBook = /** @class */function () {
       var card = cardMap.mapTo(cardNum);
       toWhom[card.order] = seat;
     });
-    return new _deal.Deal(toWhom);
+    return new _index.FullDeal(toWhom);
   };
   BridgeBook.prototype.numericDeal = function (deal) {
     var toWhom = new Array(52);
@@ -1108,173 +1437,7 @@ var BridgeBook = /** @class */function () {
 }();
 exports.BridgeBook = BridgeBook;
 
-},{"../basics/src/index.js":5,"../numeric/index.js":15,"./bijection.js":6,"./deal.js":8}],8:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Hand = exports.Deal = void 0;
-Object.defineProperty(exports, "Holding", {
-  enumerable: true,
-  get: function () {
-    return _index.Holding;
-  }
-});
-var _index = require("../basics/src/index.js");
-var Hand = /** @class */function () {
-  function Hand(cards) {
-    this.cards = cards;
-    var suits = _index.Deck.suits.map(function () {
-      return new Array();
-    });
-    this.cards.forEach(function (card) {
-      suits[card.suit.order].push(card.rank);
-    });
-    this.holdings = suits.map(function (ranks) {
-      return _index.Holding.fromRanks(ranks);
-    });
-  }
-  Hand.prototype.suit = function (suit) {
-    return this.holdings[suit.order];
-  };
-  Object.defineProperty(Hand.prototype, "spades", {
-    get: function () {
-      return this.suit(_index.Deck.suits.spades);
-    },
-    enumerable: false,
-    configurable: true
-  });
-  Object.defineProperty(Hand.prototype, "hearts", {
-    get: function () {
-      return this.suit(_index.Deck.suits.hearts);
-    },
-    enumerable: false,
-    configurable: true
-  });
-  Object.defineProperty(Hand.prototype, "diamonds", {
-    get: function () {
-      return this.suit(_index.Deck.suits.diamonds);
-    },
-    enumerable: false,
-    configurable: true
-  });
-  Object.defineProperty(Hand.prototype, "clubs", {
-    get: function () {
-      return this.suit(_index.Deck.suits.clubs);
-    },
-    enumerable: false,
-    configurable: true
-  });
-  Hand.prototype.has = function (card) {
-    return this.suit(card.suit).has(card.rank);
-  };
-  Hand.prototype.toString = function () {
-    return this.holdings.map(function (h) {
-      return h.asString('');
-    }).join(' ');
-  };
-  Hand.prototype.eachSuit = function (method) {
-    this.holdings.forEach(function (holding, index) {
-      return method(_index.Deck.suits.all[index], holding);
-    });
-  };
-  Hand.forHoldings = function (holdings) {
-    if (holdings.length != 4) {
-      throw new Error('Should be exactly four holdings');
-    }
-    var cards = new Array();
-    holdings.forEach(function (h, suitNum) {
-      var suit = _index.Deck.suits.all[suitNum];
-      h.ranks.forEach(function (rank) {
-        cards.push(_index.Deck.card(suit, rank));
-      });
-    });
-    return new Hand(cards);
-  };
-  Hand.forString = function (handString) {
-    handString = handString.toUpperCase();
-    var match = handString.match(/^ *S:?([^SHDC]*)H:?([^SHDC]*)D:?([^SHDC]*)C:?([^SHDC]*)$/);
-    if (match) {
-      var holdings = [match[1], match[2], match[3], match[4]].map(function (s) {
-        return _index.Holding.forString(s.trim());
-      });
-      return Hand.forHoldings(holdings);
-    }
-    throw Error('Invalid hand string: ' + handString);
-  };
-  return Hand;
-}();
-exports.Hand = Hand;
-function buildHands(toWhom) {
-  var cards = Array.from({
-    length: 4
-  }, function () {
-    return new Array(0);
-  });
-  toWhom.forEach(function (seat, cardNum) {
-    cards[seat.order].push(_index.Deck.cards.all[cardNum]);
-  });
-  return cards.map(function (handCards) {
-    return new Hand(handCards);
-  });
-}
-var Deal = /** @class */function () {
-  function Deal(toWhom) {
-    this.toWhom = toWhom;
-    this.hands = buildHands(toWhom);
-  }
-  Deal.prototype.hand = function (seat) {
-    return this.hands[seat.order];
-  };
-  Object.defineProperty(Deal.prototype, "north", {
-    get: function () {
-      return this.hand(_index.Seats.north);
-    },
-    enumerable: false,
-    configurable: true
-  });
-  Object.defineProperty(Deal.prototype, "east", {
-    get: function () {
-      return this.hand(_index.Seats.east);
-    },
-    enumerable: false,
-    configurable: true
-  });
-  Object.defineProperty(Deal.prototype, "south", {
-    get: function () {
-      return this.hand(_index.Seats.south);
-    },
-    enumerable: false,
-    configurable: true
-  });
-  Object.defineProperty(Deal.prototype, "west", {
-    get: function () {
-      return this.hand(_index.Seats.west);
-    },
-    enumerable: false,
-    configurable: true
-  });
-  Deal.prototype.eachHand = function (method) {
-    this.hands.forEach(function (hand, index) {
-      return method(_index.Seats.all[index], hand);
-    });
-  };
-  Deal.prototype.eachCard = function (method) {
-    this.toWhom.forEach(function (seat, index) {
-      return method(_index.Deck.cards.all[index], seat);
-    });
-  };
-  Deal.prototype.equals = function (other) {
-    return this.toWhom.length == other.toWhom.length && this.toWhom.every(function (seat, index) {
-      return seat == other.toWhom[index];
-    });
-  };
-  return Deal;
-}();
-exports.Deal = Deal;
-
-},{"../basics/src/index.js":5}],9:[function(require,module,exports){
+},{"../basics/src/index.js":7,"../numeric/index.js":16,"./bijection.js":8}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1292,28 +1455,22 @@ Object.defineProperty(exports, "Card", {
     return _index.Card;
   }
 });
-Object.defineProperty(exports, "Deal", {
-  enumerable: true,
-  get: function () {
-    return _deal.Deal;
-  }
-});
 Object.defineProperty(exports, "Deck", {
   enumerable: true,
   get: function () {
     return _index.Deck;
   }
 });
-Object.defineProperty(exports, "Hand", {
+Object.defineProperty(exports, "FullDeal", {
   enumerable: true,
   get: function () {
-    return _deal.Hand;
+    return _index.FullDeal;
   }
 });
-Object.defineProperty(exports, "Holding", {
+Object.defineProperty(exports, "FullHand", {
   enumerable: true,
   get: function () {
-    return _deal.Holding;
+    return _index.FullHand;
   }
 });
 Object.defineProperty(exports, "Rank", {
@@ -1348,9 +1505,8 @@ Object.defineProperty(exports, "Suit", {
 });
 var _index = require("../basics/src/index.js");
 var _book = require("./book.js");
-var _deal = require("./deal.js");
 
-},{"../basics/src/index.js":5,"./book.js":7,"./deal.js":8}],10:[function(require,module,exports){
+},{"../basics/src/index.js":7,"./book.js":9}],11:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1506,7 +1662,7 @@ var Application = /** @class */function () {
 }();
 exports.Application = Application;
 
-},{"./books.js":11}],11:[function(require,module,exports){
+},{"./books.js":12}],12:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1514,14 +1670,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.BookSet = void 0;
 var _index = require("../bridge/index.js");
-var _index2 = require("../numeric/index.js");
+var _index2 = require("../basics/src/index");
+var _index3 = require("../numeric/index.js");
 function common_scrambler() {
   var multiplier = BigInt("13109994191499930367061460371");
   var translation = BigInt("34563463456363563565356345634");
-  return new _index2.MultiplierScrambler(_index2.bridgeSignature.pages, multiplier, translation);
+  return new _index3.MultiplierScrambler(_index3.bridgeSignature.pages, multiplier, translation);
 }
 function edition(book, scrambler) {
-  var scrambledStrat = new _index2.ScrambleStrategy(book.strategy, scrambler);
+  var scrambledStrat = new _index3.ScrambleStrategy(book.strategy, scrambler);
   var scrambled = new _index.BridgeBook(scrambledStrat, book.seatBijection, book.cardBijection);
   return {
     normal: book,
@@ -1529,13 +1686,13 @@ function edition(book, scrambler) {
   };
 }
 function pavlicekBook() {
-  var strategy = new _index2.PavlicekDealStrategy();
+  var strategy = new _index3.PavlicekDealStrategy();
   return new _index.BridgeBook(strategy);
 }
 function andrewsBook() {
   // We use a seat map to match the original book
-  var strategy = new _index2.AndrewsDealStrategy();
-  var seatBijection = new _index.SimpleBijection(_index.Seats.all, function (seatNumber) {
+  var strategy = new _index3.AndrewsDealStrategy();
+  var seatBijection = new _index.SimpleBijection(_index2.Seats.all, function (seatNumber) {
     return 3 - seatNumber;
   });
   return new _index.BridgeBook(strategy, seatBijection);
@@ -1591,7 +1748,7 @@ var BookSet = /** @class */function () {
   };
   Object.defineProperty(BookSet.prototype, "lastPage", {
     get: function () {
-      return _index2.bridgeSignature.pages;
+      return _index3.bridgeSignature.pages;
     },
     enumerable: false,
     configurable: true
@@ -1600,7 +1757,7 @@ var BookSet = /** @class */function () {
 }();
 exports.BookSet = BookSet;
 
-},{"../bridge/index.js":9,"../numeric/index.js":15}],12:[function(require,module,exports){
+},{"../basics/src/index":7,"../bridge/index.js":10,"../numeric/index.js":16}],13:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1780,7 +1937,7 @@ var AndrewsHandStrategy = /** @class */function () {
 }();
 exports.AndrewsHandStrategy = AndrewsHandStrategy;
 
-},{"./choose.js":13,"./deal.js":14,"./squashed.js":19}],13:[function(require,module,exports){
+},{"./choose.js":14,"./deal.js":15,"./squashed.js":20}],14:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1862,7 +2019,7 @@ var multinomial = function (parts) {
 };
 exports.multinomial = multinomial;
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2037,7 +2194,7 @@ exports.NumericDeal = NumericDeal;
 var bridgeHandSignature = new HandSignature(13, 52);
 exports.bridgeHandSignature = bridgeHandSignature;
 
-},{"./choose.js":13}],15:[function(require,module,exports){
+},{"./choose.js":14}],16:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2108,7 +2265,7 @@ var _andrews = require("./andrews.js");
 var _pavlicek = require("./pavlicek.js");
 var _scramble = require("./scramble.js");
 
-},{"./andrews.js":12,"./deal.js":14,"./pavlicek.js":17,"./scramble.js":18}],16:[function(require,module,exports){
+},{"./andrews.js":13,"./deal.js":15,"./pavlicek.js":18,"./scramble.js":19}],17:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2191,7 +2348,7 @@ function modular_inverse(modulus, unit) {
   return buildInverseFromQuotients(result.quotients);
 }
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2377,7 +2534,7 @@ var PavlicekHandStrategy = /** @class */function () {
 }();
 exports.PavlicekHandStrategy = PavlicekHandStrategy;
 
-},{"./deal.js":14}],18:[function(require,module,exports){
+},{"./deal.js":15}],19:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2443,7 +2600,7 @@ function scramble_book(base, multiplier, translate) {
   return new ScrambleStrategy(base, scrambler);
 }
 
-},{"./modinverse.js":16}],19:[function(require,module,exports){
+},{"./modinverse.js":17}],20:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2510,4 +2667,4 @@ function decode(index, n) {
   return result;
 }
 
-},{"./choose.js":13}]},{},[1]);
+},{"./choose.js":14}]},{},[1]);
