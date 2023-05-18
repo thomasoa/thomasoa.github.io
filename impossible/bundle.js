@@ -290,7 +290,8 @@ var Seats = {
   all: AllSeats,
   each: AllSeats.forEach.bind(AllSeats),
   map: AllSeats.map.bind(AllSeats),
-  byText: SeatNameMap.get.bind(SeatNameMap)
+  byText: SeatNameMap.get.bind(SeatNameMap),
+  toTuple: toSeatTuple
 };
 exports.Seats = Seats;
 Object.freeze(Seats);
@@ -379,6 +380,20 @@ AllSuits.forEach(function (suit) {
   SuitNameMap.set(suit.letter, suit);
   SuitNameMap.set(suit.singular, suit);
 });
+function toSuitTuple(arg) {
+  if (arg instanceof Array) {
+    return arg;
+  }
+  var argRec = arg;
+  return [argRec.spades, argRec.hearts, argRec.diamonds, argRec.clubs];
+}
+function toSeatTuple(arg) {
+  if (arg instanceof Array) {
+    return arg;
+  }
+  var argRec = arg;
+  return [argRec.north, argRec.east, argRec.south, argRec.west];
+}
 var Suits = {
   spades: Spades,
   hearts: Hearts,
@@ -389,7 +404,8 @@ var Suits = {
   minors: [Diamonds, Clubs],
   each: AllSuits.forEach.bind(AllSuits),
   map: AllSuits.map.bind(AllSuits),
-  byText: SuitNameMap.get.bind(SuitNameMap)
+  byText: SuitNameMap.get.bind(SuitNameMap),
+  toTuple: toSuitTuple
 };
 Suits.each(Object.freeze);
 Object.freeze(Suits);
