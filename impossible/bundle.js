@@ -681,12 +681,9 @@ var FullDeal = /** @class */function () {
     });
   };
   FullDeal.prototype.equals = function (other) {
-    this.toWhom.forEach(function (seat, index) {
-      if (seat != other.toWhom[index]) {
-        return false;
-      }
+    return this.toWhom.every(function (seat, index) {
+      return seat == other.toWhom[index];
     });
-    return true;
   };
   return FullDeal;
 }();
@@ -2246,6 +2243,12 @@ Object.defineProperty(exports, "ScrambleStrategy", {
   enumerable: true,
   get: function () {
     return _scramble.ScrambleStrategy;
+  }
+});
+Object.defineProperty(exports, "bridgeHandSignature", {
+  enumerable: true,
+  get: function () {
+    return _deal.bridgeHandSignature;
   }
 });
 Object.defineProperty(exports, "bridgeSignature", {
