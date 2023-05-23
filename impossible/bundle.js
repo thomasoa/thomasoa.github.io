@@ -680,6 +680,28 @@ var FullDeal = /** @class */function () {
       return method(_constants.Seats.all[index], hand);
     });
   };
+  FullDeal.pbnParse = function (str) {
+    var parts = str.split(':');
+    if (parts.length != 5) {
+      throw new Error('Invalid deal string: ' + str);
+    }
+    var firstSeat = _constants.Seats.byText(parts[0]);
+    if (firstSeat == undefined) {
+      throw new Error('Invalid first seat ' + parts[0] + ' for deal ' + str);
+    }
+    var hands = parts.slice(1).map(function (part) {
+      return _hand.FullHand.pbnParse(part);
+    });
+    var toWhom = new Array(52);
+    var currentSeat = firstSeat;
+    hands.forEach(function (hand) {
+      hand.eachCard(function (card) {
+        toWhom[card.order] = currentSeat;
+      });
+      currentSeat = currentSeat.lho;
+    });
+    return new FullDeal(toWhom);
+  };
   FullDeal.prototype.equals = function (other) {
     return this.toWhom.every(function (seat, index) {
       return seat == other.toWhom[index];
@@ -886,6 +908,18 @@ var FullHand = /** @class */function () {
       result.push(callback(card));
     });
     return result;
+  };
+  FullHand.pbnParse = function (str, seperator) {
+    if (seperator === void 0) {
+      seperator = '.';
+    }
+    var holdings = str.split(seperator).map(function (s) {
+      return _holding.Holding.forString(s);
+    });
+    if (holdings.length != 4) {
+      throw new Error('Wrong number of holdings for hand ' + str);
+    }
+    return new FullHand(holdings);
   };
   FullHand.byCards = function (cards) {
     var suitBits = [0, 0, 0, 0];
